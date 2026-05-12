@@ -42,9 +42,17 @@ return new class extends Migration
                             'is_active' => [
                                 'bsonType' => 'bool'
                             ],
+                            'created_by' => [
+                                'bsonType' => 'objectId',
+                                'description' => 'Created user id'
+                            ],
 
                             'created_at' => [
                                 'bsonType' => 'date'
+                            ],
+                            'updated_by' => [
+                                'bsonType' => 'objectId',
+                                'description' => 'Updated user id'
                             ],
 
                             'updated_at' => [
