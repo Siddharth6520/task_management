@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class attachment extends Model
+class Attachment extends Model
 {
     protected $connection = 'mongodb';
     protected $collction = 'attachments';
@@ -27,11 +27,11 @@ class attachment extends Model
 
     public function task()
     {
-        return $this->belongsTo(task::class, 'task_id');
+        return $this->belongsTo(Tasks::class, 'task_id');
     }
     public function workspace()
     {
-        return $this->belongsTo(workspace::class, 'workspace_id');
+        return $this->belongsTo(Team::class, 'workspace_id');
     }
     public function creator()
     {

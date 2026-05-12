@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\attachment;
+use App\Models\Attachment;
 use Illuminate\Http\Request;
 
 class AttachmentController extends Controller
@@ -26,7 +26,7 @@ class AttachmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(attachment $attachment)
+    public function show(Attachment $attachment)
     {
         //
     }
@@ -34,7 +34,7 @@ class AttachmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, attachment $attachment)
+    public function update(Request $request, Attachment $attachment)
     {
         //
     }
@@ -42,7 +42,7 @@ class AttachmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(attachment $attachment)
+    public function destroy(Attachment $attachment)
     {
         //
     }

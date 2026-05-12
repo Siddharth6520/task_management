@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class permission extends Model
+class Permission extends Model
 {
     protected $connection = 'mongodb';
     protected $collection = 'permissions';
@@ -18,7 +18,7 @@ class permission extends Model
         'is_active',
         'created_by',
         'updated_by'
-    ]
+    ];
 
     protected $attributes = [
         'description' => '',
@@ -32,12 +32,12 @@ class permission extends Model
 
     public function module()
     {
-        return $this->belongsTo(modules::class, 'module_id');
+        return $this->belongsTo(Module::class, 'module_id');
     }
 
     public function action()
     {
-        return $this->belongsTo(actions::class, 'action_id');
+        return $this->belongsTo(Action::class, 'action_id');
     }
     public function creator()
     { 

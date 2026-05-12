@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class taskStatusHistory extends Model
+class TaskStatusHistory extends Model
 {
     protected $connection = 'mongodb';
     protected $collection = 'task_status_histories';
@@ -27,7 +27,7 @@ class taskStatusHistory extends Model
 
     public function task()
     {
-        return $this->belongsTo(task::class, 'task_id');
+        return $this->belongsTo(Tasks::class, 'task_id');
     }
     public function changer()
     {
