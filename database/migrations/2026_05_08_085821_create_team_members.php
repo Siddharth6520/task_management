@@ -59,6 +59,14 @@ return new class extends Migration
 
                             'updated_at' => [
                                 'bsonType' => 'date'
+                            ],
+
+                            'created_by' => [
+                                'bsonType' => 'objectId'
+                            ],
+
+                            'updated_by' => [
+                                'bsonType' => 'objectId'
                             ]
                         ]
                     ]
@@ -67,7 +75,7 @@ return new class extends Migration
         );
         DB::connection('mongodb')
             ->getMongoDB()
-            ->selectCollection('users')
+            ->selectCollection('team_members')
             ->createIndex(
                 [
                     'team_id' => 1,

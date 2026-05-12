@@ -46,14 +46,6 @@ return new class extends Migration {
                             //     ]
                             // ],
 
-                            'department_id' => [
-                                'bsonType' => 'objectId' //will make it array if he works on different departments
-                            ],
-
-                            'team_id' => [
-                                'bsonType' => 'objectId' //same for this as well
-                            ],
-
                             'is_active' => [
                                 'bsonType' => 'boolean'
                             ],

@@ -66,7 +66,7 @@ return new class extends Migration
         );
         DB::connection('mongodb')
             ->getMongoDB()
-            ->selectCollection('users')
+            ->selectCollection('permissions')
             ->createIndex(
                 [
                     'module_id' => 1,
