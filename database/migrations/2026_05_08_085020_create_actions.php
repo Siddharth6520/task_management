@@ -41,7 +41,16 @@ return new class extends Migration
 
                             'updated_at' => [
                                 'bsonType' => 'date'
-                            ]
+                            ],
+                            'created_by' => [
+                                'bsonType' => 'objectId',
+                                'description' => 'Created user id'
+                            ],
+
+                            'updated_by' => [
+                                'bsonType' => 'objectId',
+                                'description' => 'Updated user id'
+                            ],
                         ]
                     ]
                 ]

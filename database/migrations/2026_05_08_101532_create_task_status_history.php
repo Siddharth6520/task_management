@@ -65,8 +65,8 @@ return new class extends Migration
                                 'bsonType' => 'objectId'
                             ],
 
-                            'changed_at' => [
-                                'bsonType' => 'date'
+                            'created_by' => [
+                                'bsonType' => 'objectId'
                             ],
 
                             'created_at' => [
