@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use MongoDB\Laravel\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class teams extends Model
+class Team extends Model
 {
     protected $connection = 'mongodb';
     protected $collection = 'teams';

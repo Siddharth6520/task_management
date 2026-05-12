@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class rolePermission extends Model
+class RolePermission extends Model
 {
     protected $connection = 'mongodb';
     protected $collection = 'role_permissions';
@@ -14,7 +14,7 @@ class rolePermission extends Model
         'permission_id',
         'created_by',
         'updated_by'
-    ]
+    ];
 
     protected $casts = [
         'created_at' => 'datetime',
@@ -23,11 +23,11 @@ class rolePermission extends Model
 
     public function role()
     {
-        return $this->belongsTo(role::class, 'role_id');
+        return $this->belongsTo(Role::class, 'role_id');
     }
     public function permission()
     {
-        return $this->belongsTo(permission::class, 'permission_id');
+        return $this->belongsTo(Permission::class, 'permission_id');
     }
     public function creator()
     { 

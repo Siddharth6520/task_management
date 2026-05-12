@@ -43,12 +43,12 @@ class Tasks extends Model
 
     public function workflow_template()
     {
-        return $this->belongsTo(WorkflowTemplate::class, 'workflow_template_id');
+        return $this->belongsTo(WorkTemplate::class, 'workflow_template_id');
     }
 
     public function current_workflow_stage()
     {
-        return $this->belongsTo(WorkflowStage::class, 'current_workflow_stage_id');
+        return $this->belongsTo(WorkStage::class, 'current_workflow_stage_id');
     }
 
     public function user()
@@ -68,7 +68,7 @@ class Tasks extends Model
 
     public function history()
     {
-        return $this->hasMany(TaskHistory::class, 'task_id');
+        return $this->hasMany(TaskStatusHistory::class, 'task_id');
     }
  
 }

@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class projects extends Model
+class Module extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'projects';
+    protected $collection = 'modules';
 
     protected $fillable = [
-        'project_code',
         'name',
+        'code',
         'description',
         'is_active',
         'created_by',
@@ -28,10 +28,10 @@ class projects extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];
-
+    
     public function creator()
     { 
-    return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function updater()

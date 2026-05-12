@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\teams;
+use App\Models\Team;
 use Illuminate\Http\Request;
 
 class TeamsController extends Controller
@@ -26,7 +26,7 @@ class TeamsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(teams $teams)
+    public function show(Team $team)
     {
         //
     }
@@ -34,7 +34,7 @@ class TeamsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, teams $teams)
+    public function update(Request $request, Team $team)
     {
         //
     }
@@ -42,7 +42,7 @@ class TeamsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(teams $teams)
+    public function destroy(Team $team)
     {
         //
     }

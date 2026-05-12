@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\WorkStages;
+use App\Models\WorkStage;
 use Illuminate\Http\Request;
 
 class WorkStagesController extends Controller
@@ -26,7 +26,7 @@ class WorkStagesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(WorkStages $workTemplateStages)
+    public function show(WorkStage $workTemplateStages)
     {
         //
     }
@@ -34,7 +34,7 @@ class WorkStagesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, WorkStages $workStages)
+    public function update(Request $request, WorkStage $workStages)
     {
         //
     }
@@ -42,7 +42,7 @@ class WorkStagesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(WorkStages $workStages)
+    public function destroy(WorkStage $workStages)
     {
         //
     }

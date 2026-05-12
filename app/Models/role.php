@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class role extends Model
+class Role extends Model
 {
     protected $connection = 'mongodb';
     protected $collection = 'roles';
@@ -16,7 +16,7 @@ class role extends Model
         'is_active',
         'created_by',
         'updated_by'
-    ]
+    ];
     protected $attributes = [
         'description' => '',
         'is_active' => true

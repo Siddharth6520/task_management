@@ -37,7 +37,7 @@ class WorkTemplate extends Model
 
     public function workflow_stages()
     {
-        return $this->hasMany(WorkflowStage::class, 'workflow_template_id');
+        return $this->hasMany(WorkStage::class, 'workflow_template_id');
     }
 
     public function tasks()

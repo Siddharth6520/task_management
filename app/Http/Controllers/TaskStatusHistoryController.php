@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\taskStatusHistory;
+use App\Models\TaskStatusHistory;
 use Illuminate\Http\Request;
 
 class TaskStatusHistoryController extends Controller
@@ -26,7 +26,7 @@ class TaskStatusHistoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(taskStatusHistory $taskStatusHistory)
+    public function show(TaskStatusHistory $TaskStatusHistory)
     {
         //
     }
@@ -34,7 +34,7 @@ class TaskStatusHistoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, taskStatusHistory $taskStatusHistory)
+    public function update(Request $request, TaskStatusHistory $TaskStatusHistory)
     {
         //
     }
@@ -42,7 +42,7 @@ class TaskStatusHistoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(taskStatusHistory $taskStatusHistory)
+    public function destroy(TaskStatusHistory $TaskStatusHistory)
     {
         //
     }
