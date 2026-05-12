@@ -45,7 +45,7 @@ return new class extends Migration
         );
          DB::connection('mongodb')
             ->getMongoDB()
-            ->selectCollection('users')
+            ->selectCollection('role_permissions')
             ->createIndex(
                 ['role_id' => 1, 'permission_id' => 1],
                 ['unique' => true]

@@ -44,8 +44,6 @@ return new class extends Migration
                                 'bsonType' => 'string'
                             ],
 
-
-
                             'project_id' => [
                                 'bsonType' => 'objectId'
                             ],

@@ -12,7 +12,7 @@ return new class extends Migration
     {
         // workflow stages configuration
         DB::connection('mongodb')->getMongoDB()->createCollection(
-            'workflow_template_stages',
+            'workflow_stages',
             [
                 'validator' => [
                     '$jsonSchema' => [
@@ -130,14 +130,14 @@ return new class extends Migration
 
         DB::connection('mongodb')
             ->getMongoDB()
-            ->selectCollection('workflow_template_stages')
+            ->selectCollection('workflow_stages')
             ->createIndex([
                 'workflow_template_id' => 1
             ]);
 
         DB::connection('mongodb')
             ->getMongoDB()
-            ->selectCollection('workflow_template_stages')
+            ->selectCollection('workflow_stages')
             ->createIndex([
                 'department_id' => 1
             ]);
@@ -150,7 +150,7 @@ return new class extends Migration
 
         DB::connection('mongodb')
             ->getMongoDB()
-            ->selectCollection('workflow_template_stages')
+            ->selectCollection('workflow_stages')
             ->createIndex(
                 [
                     'workflow_template_id' => 1,
@@ -169,6 +169,6 @@ return new class extends Migration
     {
         DB::connection('mongodb')
             ->getMongoDB()
-            ->dropCollection('workflow_template_stages');
+            ->dropCollection('workflow_stages');
     }
 };
