@@ -28,6 +28,20 @@ return new class extends Migration
 
                             'team_lead_id' =>[
                                 'bsonType' => 'integer' 
+                            ],
+                            'created_by' => [
+                                'bsonType' => 'objectId',
+                                'description' => 'Created user id'
+                            ],
+                            'created_at' => [
+                                'bsonType' => 'date'
+                            ],
+                            'updated_by' => [
+                                'bsonType' => 'objectId',
+                                'description' => 'Updated user id'
+                            ],
+                            'updated_at' => [
+                                'bsonType' => 'date'
                             ]
                         ]
                     ]

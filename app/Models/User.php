@@ -7,8 +7,6 @@ use MongoDB\Laravel\Auth\User as Authenticatable;
 use MongoDB\Laravel\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-// #[Fillable(['name', 'email', 'password'])]
-// #[Hidden(['password', 'remember_token'])]
 
 class User extends Authenticatable
 {
