@@ -27,7 +27,7 @@ return new class extends Migration
                             ],
 
                             'team_lead_id' =>[
-                                'bsonType' => 'integer' 
+                                'bsonType' => 'int' 
                             ],
                             'created_by' => [
                                 'bsonType' => 'objectId',

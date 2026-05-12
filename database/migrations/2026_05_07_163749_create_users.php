@@ -47,7 +47,7 @@ return new class extends Migration {
                             // ],
 
                             'is_active' => [
-                                'bsonType' => 'boolean'
+                                'bsonType' => 'bool'
                             ],
 
                             'created_at' => [
