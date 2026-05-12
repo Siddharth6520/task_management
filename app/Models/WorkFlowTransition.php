@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+// use Illuminate\Database\Eloquent\Model;
+use MongoDB\Laravel\Eloquent\Model;
+
 
 class WorkFlowTransition extends Model
 {
@@ -51,12 +53,12 @@ class WorkFlowTransition extends Model
 
     public function from_workflow_stage()
     {
-        return $this->belongsTo(WorkflowStage::class, 'from_workflow_stage_id');
+        return $this->belongsTo(WorkStage::class, 'from_workflow_stage_id');
     }
 
     public function to_workflow_stage()
     {
-        return $this->belongsTo(WorkflowStage::class, 'to_workflow_stage_id');
+        return $this->belongsTo(WorkStage::class, 'to_workflow_stage_id');
     }
 
     public function transitioned_by()
