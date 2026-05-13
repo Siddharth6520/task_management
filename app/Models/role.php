@@ -26,13 +26,15 @@ class Role extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'created_at' => 'datetime',
-        'updated_at' => 'datetime'
+        'updated_at' => 'datetime',
+        'created_by' => 'objectId',
+        'updated_by' => 'objectId',
     ];
 
     public function updater()
     {
         return $this->belongsTo(User::class, 'updated_by');
-    }   
+    }
 
     public function creator()
     {
