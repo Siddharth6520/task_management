@@ -23,6 +23,14 @@ class ActionSeeder extends Seeder
             ['name' => 'Delete', 'code'=>'DELETE', 'description' => 'Delete records'],  
         ];
 
-        Action::insert($actions);
+        foreach ($actions as $action) {
+
+            Action::updateOrCreate(
+                [
+                    'code' => $action['code']
+                ],
+                $action
+            );
+        }
     }
 }
