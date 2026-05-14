@@ -13,9 +13,13 @@ class ProjectsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(DocumentManager $dm)
     {
-        //
+        $projects = $dm->getRepository(Project::class)
+        ->findAll();
+
+        $result = [];
+        
     }
 
     /**
