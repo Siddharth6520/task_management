@@ -47,6 +47,15 @@ class ModuleSeeder extends Seeder
 
         ];
 
-        Module::insert($modules);
+        foreach ($modules as $module) {
+
+            Module::updateOrCreate(
+                [
+                    'code' => $module['code']
+                ],
+                $module
+            );
+        }
+
     }
 }
