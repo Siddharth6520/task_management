@@ -16,7 +16,7 @@ return new class extends Migration {
                         'bsonType' => 'object',
                         'required' => ['name', 'email', 'mobile_no', 'password',
                         //  'global_role', 
-                         'department_id', 'team_id'],
+                        ],
                         'properties' => [
                             'name' => [
                                 'bsonType' => 'string'

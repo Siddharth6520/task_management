@@ -10,9 +10,11 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "doctrine/mongodb-odm": "*",
         "laravel/framework": "^13.7",
         "laravel/tinker": "^3.0",
-        "mongodb/laravel-mongodb": "*"
+        "mongodb/laravel-mongodb": "*",
+        "tymon/jwt-auth": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

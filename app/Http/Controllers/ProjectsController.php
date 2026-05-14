@@ -1,8 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\DB\DBConnection;
 
+$dm = (new DBConnection())->dbConnection();
 use App\Models\Project;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Illuminate\Http\Request;
 
 class ProjectsController extends Controller
