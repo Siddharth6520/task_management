@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\UserController;
 
+
+Route::get('/users', [UserController::class, 'index'])
 ?>

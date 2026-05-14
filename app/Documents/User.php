@@ -1,9 +1,7 @@
 <?php
 
 namespace App\Documents;
-use App\Documents\Task;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
+
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -11,13 +9,6 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 #[ODM\Document(collection: "users")]
 class User implements JWTSubject
 {
-
-
-    #[ODM\ReferenceMany(
-        targetDocument: Task::class,
-        mappedBy: 'user'
-    )]
-    private Collection $tasks;
 
     #[ODM\Id]
     private string $id;
@@ -46,6 +37,9 @@ class User implements JWTSubject
 
         return $this;
     }
+    public function getName(): string{
+        return $this->name;
+    }
 
 
 
@@ -68,11 +62,14 @@ class User implements JWTSubject
 
     #[ODM\Field(type: "string")]
     private string $mobile_no;
-    public function setMobileNo(string $mobileNo): self
+    public function setMobileNo(string $mobile_no): self
     {
-        $this->mobile_no = trim($mobileNo);
+        $this->mobile_no = trim($mobile_no);
 
         return $this;
+    }
+    public function getMobileNo(): string{
+        return $this->email;
     }
 
 
@@ -84,6 +81,10 @@ class User implements JWTSubject
         $this->username = strtolower(trim($username));
 
         return $this;
+    }
+    public function getUsername(): string
+    {
+        return $this->username;
     }
 
 
@@ -109,6 +110,10 @@ class User implements JWTSubject
 
     #[ODM\Field(type: "bool")]
     private bool $is_active = true;
+    public function isActive():bool{
+        return $this->is_active;
+    }
+
     public function setIsActive(bool $status): self
     {
         $this->is_active = $status;
