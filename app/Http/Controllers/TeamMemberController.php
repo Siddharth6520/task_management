@@ -242,6 +242,33 @@ class TeamMemberController extends Controller
         }
     }
 
+     //bulk_create
+    public function bulk_store(BulkTeamMemberRequest $request, DocumentManager $dm) {
+
+        try {
+
+            Excel::import(
+                new TeamMembersImport($dm),
+                $request->file('file')
+            );
+
+            return CommonHelper::response(
+                true,
+                201,
+                null,
+                "Bulk employee import completed successfully"
+            );
+        } catch (\Exception $e) {
+
+            return CommonHelper::response(
+                false,
+                500,
+                null,
+                "Internal Server Error :- " . $e->getMessage()
+            );
+        }
+    }
+
     //read
     public function show(string $id, DocumentManager $dm)
     {
@@ -557,30 +584,5 @@ class TeamMemberController extends Controller
         }
     }
 
-    //bulk_create
-    public function bulk_store(BulkTeamMemberRequest $request, DocumentManager $dm) {
-
-        try {
-
-            Excel::import(
-                new TeamMembersImport($dm),
-                $request->file('file')
-            );
-
-            return CommonHelper::response(
-                true,
-                201,
-                null,
-                "Bulk employee import completed successfully"
-            );
-        } catch (\Exception $e) {
-
-            return CommonHelper::response(
-                false,
-                500,
-                null,
-                "Internal Server Error :- " . $e->getMessage()
-            );
-        }
-    }
+   
 }
