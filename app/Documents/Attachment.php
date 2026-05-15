@@ -6,7 +6,7 @@ use DateTime;
 use App\Documents\User;
 use App\Documents\Tasks;
 use App\Documents\WorkStage;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 
 #[ODM\Document(collection: "attachments")]
 #[ODM\Index(keys: [
