@@ -29,10 +29,12 @@ class PermissionSeeder extends Seeder
                     'module_id' => $module->_id,
                     'action_id' => $action->_id,
 
-                    'name' => ucfirst(strtolower($module->name)) . ' ' .
-                               ucfirst(strtolower($action->name)),
+                    'name' =>
+                        ucfirst(strtolower($module->name)) . ' ' .
+                        ucfirst(strtolower($action->name)),
 
-                    'code' => strtoupper($module->code . '_' . $action->code),
+                    'code' =>
+                        strtoupper($module->code . '_' . $action->code),
 
                     'description' =>
                         "Permission to {$action->name} {$module->name}",
@@ -42,6 +44,14 @@ class PermissionSeeder extends Seeder
             }
         }
 
-        Permission::query()->insert($permissions);
+        foreach ($permissions as $permission) {
+
+            Permission::updateOrCreate(
+                [
+                    'code' => $permission['code']
+                ],
+                $permission
+            );
+        }
     }
 }

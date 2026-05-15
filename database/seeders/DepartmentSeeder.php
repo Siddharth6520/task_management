@@ -56,6 +56,13 @@ class DepartmentSeeder extends Seeder
             ],
         ];
 
-        Department::query()->insert($departments);
+       foreach ($departments as $department) {
+            Department::updateOrCreate(
+                [
+                    'code' => $department['code']
+                ],
+                $department
+            );
+        }
     }
 }
