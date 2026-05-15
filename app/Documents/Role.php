@@ -4,7 +4,7 @@ namespace App\Documents;
 
 use DateTime;
 use App\Documents\User;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 
 #[ODM\Document(collection: "roles")]
 #[ODM\Index(keys: ['code' => 'asc'], unique: true)]

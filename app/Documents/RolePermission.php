@@ -6,7 +6,7 @@ use DateTime;
 use App\Documents\User;
 use App\Documents\Role;
 use App\Documents\Permission;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 
 #[ODM\Document(collection: "role_permissions")]
 #[ODM\UniqueIndex(keys: [
