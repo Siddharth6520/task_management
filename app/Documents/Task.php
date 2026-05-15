@@ -12,7 +12,8 @@ use App\Documents\WorkTemplate;
 use App\Documents\TaskStatusHistory;
 use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 
-
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ODM\Document(collection: "tasks")]
 
@@ -108,6 +109,23 @@ class Tasks
     |--------------------------------------------------------------------------
     */
 
+     public function __construct()
+    {
+        $this->attachments = new ArrayCollection();
+    }
+
+    #[ODM\ReferenceMany(
+        targetDocument: Attachment::class,
+        mappedBy: 'task'
+    )]
+    private Collection $attachments;
+
+    public function getAttachments(): Collection
+    {
+        return $this->attachments;
+    }
+
+   
     #[ODM\ReferenceOne(
         targetDocument: Project::class,
         storeAs: 'id',
@@ -147,6 +165,7 @@ class Tasks
 
         return $this;
     }
+
 
 
 
@@ -497,7 +516,7 @@ class Tasks
         $this->created_at = new DateTime();
     }
     #[ODM\PreUpdate]
-    public function preUpdate():void
+    public function preUpdate(): void
     {
         $this->updated_at = new DateTime();
     }

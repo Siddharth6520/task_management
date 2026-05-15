@@ -8,6 +8,7 @@ use App\Documents\Tasks;
 use App\Documents\WorkStage;
 use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 
+#[ODM\HasLifecycleCallbacks]
 #[ODM\Document(collection: "attachments")]
 #[ODM\Index(keys: [
     'task' => 'asc',
@@ -209,5 +210,11 @@ class Attachment
         $this->uploaded_at = $uploaded_at;
 
         return $this;
+    }
+
+    #[ODM\PrePersist]
+    public function prePersist(): void
+    {
+        $this->uploaded_at ??= new DateTime();
     }
 }

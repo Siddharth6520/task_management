@@ -103,11 +103,11 @@ class TeamMemberController extends Controller
     public function store(Request $request, DocumentManager $dm)
     {
         $validator = Validator::make($request->all(), [
-            'team_id' => 'required|numeric',
-            'user_id' => 'required|numeric',
-            'department_id' => 'required|numeric',
-            'role_id' => 'required|numeric',
-            'reporting_manager_id' => 'required|numeric'
+            'team_id' => 'required|string',
+            'user_id' => 'required|string',
+            'department_id' => 'required|string',
+            'role_id' => 'required|string',
+            'reporting_manager_id' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -242,8 +242,9 @@ class TeamMemberController extends Controller
         }
     }
 
-     //bulk_create
-    public function bulk_store(BulkTeamMemberRequest $request, DocumentManager $dm) {
+    //bulk_create
+    public function bulk_store(BulkTeamMemberRequest $request, DocumentManager $dm)
+    {
 
         try {
 
@@ -583,6 +584,4 @@ class TeamMemberController extends Controller
             );
         }
     }
-
-   
 }
