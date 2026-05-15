@@ -320,9 +320,9 @@ class Tasks
         return $this->original_due_at;
     }
 
-    public function setOriginalDueAt(?DateTime $original_due_at): self
+    public function setOriginalDueAt(?DateTime $due_at): self
     {
-        $this->original_due_at = $original_due_at;
+        $this->original_due_at = $due_at;
 
         return $this;
     }

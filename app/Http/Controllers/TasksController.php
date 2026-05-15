@@ -195,8 +195,13 @@ class TasksController extends Controller
             $task->setStartedAt($request->started_at ? new \DateTime($request->started_at) : null);
             $task->setCompletedAt($request->completed_at ? new \DateTime($request->completed_at) : null);
 
-            $task->setOriginalDueAt($request->original_due_at ? new \DateTime($request->original_due_at) : null);
+            // $task->setOriginalDueAt($request->original_due_at ? new \DateTime($request->original_due_at) : null);
+            if (!$task->getOriginalDueAt() && $task->getDueAt()) {
 
+                $task->setOriginalDueAt(
+                    clone $task->getDueAt()
+                );
+            }
             // $task->setCreatedAt(new \DateTime());
             // $task->setUpdatedAt(new \DateTime());
             $task->setCreatedBy($assignee);
@@ -463,8 +468,23 @@ class TasksController extends Controller
 
                 $oldStatus = $task->getExecutionStatus();
 
+                //status completion blocked if SLA is breached
                 $newStatus = $request->execution_status;
+                if (
+                    $newStatus === 'completed'
+                    && $task->isSlaBreached()
+                ) {
+                    $session->abortTransaction();
 
+                    return CommonHelper::response(
+                        false,
+                        422,
+                        null,
+                        "Task SLA is breached. Please request a due date extension before marking as completed."
+                    );
+                }
+
+                // Calculate hold duration if moving to or from 'on_hold'
                 $holdDuration = 0;
 
 
