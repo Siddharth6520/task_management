@@ -39,17 +39,17 @@ class WorkStage
     */
 //template-web id-1 ui-1->backend-2->frontend-3->qa-4->delivery-5
     #[ODM\ReferenceOne(
-        targetDocument: WorkTemplate::class,
+        targetDocument: WorkFlowTemplate::class,
         storeAs: 'id'
     )]
-    private ?WorkTemplate $workflow_template = null;
+    private ?WorkFlowTemplate $workflow_template = null;
 
-    public function getWorkflowTemplate(): ?WorkTemplate
+    public function getWorkflowTemplate(): ?WorkFlowTemplate
     {
         return $this->workflow_template;
     }
 
-    public function setWorkflowTemplate(?WorkTemplate $workflow_template): self
+    public function setWorkflowTemplate(?WorkFlowTemplate $workflow_template): self
     {
         $this->workflow_template = $workflow_template;
 
