@@ -3,7 +3,7 @@
 namespace App\Documents;
 
 use App\Documents\User;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 
 #[ODM\Document(collection: "modules")]
 #[ODM\Index(keys: ['code' => 'asc'], unique: true)]

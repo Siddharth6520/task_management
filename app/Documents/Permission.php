@@ -6,7 +6,7 @@ use DateTime;
 use App\Documents\User;
 use App\Documents\Action;
 use App\Documents\Module;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 
 #[ODM\Document(collection: "permissions")]
 #[ODM\HasLifecycleCallbacks]

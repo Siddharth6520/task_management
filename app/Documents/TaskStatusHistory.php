@@ -5,9 +5,10 @@ namespace App\Documents;
 use DateTime;
 use App\Documents\User;
 use App\Documents\Tasks;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 
 #[ODM\Document(collection: "task_status_histories")]
+#[ODM\HasLifecycleCallbacks]
 #[ODM\Index(keys: [
     'task' => 'asc'
 ])]
@@ -58,17 +59,19 @@ class TaskStatusHistory
     |--------------------------------------------------------------------------
     */
 
-    #[ODM\Field(type: "string")]
-    private string $from_status;
+    #[ODM\Field(type: "string", nullable: true)]
+    private ?string $from_status = null;
 
-    public function getFromStatus(): string
+    public function getFromStatus(): ?string
     {
         return $this->from_status;
     }
 
-    public function setFromStatus(string $from_status): self
+    public function setFromStatus(?string $from_status): self
     {
-        $this->from_status = strtolower(trim($from_status));
+        $this->from_status = $from_status
+            ? strtolower(trim($from_status))
+            : null;
 
         return $this;
     }
@@ -192,35 +195,12 @@ class TaskStatusHistory
 
 
 
-    #[ODM\Field(type: "date", nullable: true)]
-    private ?DateTime $created_at = null;
+    
 
-    public function getCreatedAt(): ?DateTime
+    #[ODM\PrePersist]
+    public function prePersist(): void
     {
-        return $this->created_at;
+        $this->changed_at ??= new DateTime();
     }
-
-    public function setCreatedAt(?DateTime $created_at): self
-    {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
-
-
-    #[ODM\Field(type: "date", nullable: true)]
-    private ?DateTime $updated_at = null;
-
-    public function getUpdatedAt(): ?DateTime
-    {
-        return $this->updated_at;
-    }
-
-    public function setUpdatedAt(?DateTime $updated_at): self
-    {
-        $this->updated_at = $updated_at;
-
-        return $this;
-    }
+   
 }
