@@ -7,7 +7,7 @@ use App\Documents\User;
 use App\Documents\Tasks;
 use App\Documents\Department;
 use App\Documents\WorkStage;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 
 #[ODM\Document(collection: "workflow_transitions")]
 #[ODM\Index(keys: [
