@@ -10,9 +10,11 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "dedoc/scramble": "*",
         "doctrine/mongodb-odm": "*",
         "laravel/framework": "^13.7",
         "laravel/tinker": "^3.0",
+        "maatwebsite/excel": "*",
         "mongodb/laravel-mongodb": "*",
         "tymon/jwt-auth": "*"
     },
