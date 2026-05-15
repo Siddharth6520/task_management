@@ -46,12 +46,17 @@ class PermissionSeeder extends Seeder
 
         foreach ($permissions as $permission) {
 
-            Permission::updateOrCreate(
-                [
-                    'code' => $permission['code']
-                ],
-                $permission
-            );
+            try {
+                Permission::updateOrCreate(
+                    [
+                        'code' => $permission['code']
+                    ],
+                    $permission
+                );
+            } catch (\Throwable $e) {
+                \Log::error('PermissionSeeder failed for permission', ['permission' => $permission, 'exception' => $e->getMessage()]);
+                throw $e;
+            }
         }
     }
 }

@@ -28,7 +28,7 @@ class Attachment extends Model
 
     public function task()
     {
-        return $this->belongsTo(Tasks::class, 'task_id');
+        return $this->belongsTo(Task::class, 'task_id');
     }
     public function workspace()
     {

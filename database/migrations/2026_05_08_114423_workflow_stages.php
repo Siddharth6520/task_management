@@ -28,7 +28,7 @@ return new class extends Migration
                         'properties' => [
 
                             'workflow_template_id' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             /*
@@ -46,7 +46,7 @@ return new class extends Migration
                             ],
 
                             'department_id' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             /*
@@ -56,7 +56,7 @@ return new class extends Migration
                             */
 
                             'role_id' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             'can_skip' => [
@@ -102,11 +102,11 @@ return new class extends Migration
                             */
 
                             'created_by' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId', 'null']
                             ],
 
                             'updated_by' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId', 'null']
                             ],
 
                             'created_at' => [

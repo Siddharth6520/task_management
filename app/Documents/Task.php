@@ -32,7 +32,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 #[ODM\UniqueIndex(keys: [
     'task_code' => 'asc'
 ])]
-class Tasks
+class Task
 {
     #[ODM\Id]
     private string $id;

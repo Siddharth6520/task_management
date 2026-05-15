@@ -5,7 +5,7 @@ namespace App\Models;
 // use Illuminate\Database\Eloquent\Model;
 use MongoDB\Laravel\Eloquent\Model;
 
-class Tasks extends Model
+class Task extends Model
 {
     protected $connection = 'mongodb';
     protected $collection = 'tasks';

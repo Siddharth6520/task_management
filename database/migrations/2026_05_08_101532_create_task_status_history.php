@@ -29,7 +29,7 @@ return new class extends Migration
                         'properties' => [
 
                             'task_id' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             'from_status' => [
@@ -62,11 +62,11 @@ return new class extends Migration
                             ],
 
                             'changed_by' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId', 'null']
                             ],
 
                             'created_by' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId', 'null']
                             ],
 
                             'created_at' => [

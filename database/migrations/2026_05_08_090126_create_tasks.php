@@ -45,23 +45,23 @@ return new class extends Migration
                             ],
 
                             'project_id' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             'current_department_id' => [  //1
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             'current_assignee_id' => [ //Siddharth
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             'workflow_template_id' => [ //common workflow
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             'current_workflow_stage_id' => [ //1 - Backend
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
 
@@ -133,11 +133,11 @@ return new class extends Migration
                             ],
 
                             'created_by' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId', 'null']
                             ],
 
                             'updated_by' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId', 'null']
                             ],
 
                             'created_at' => [

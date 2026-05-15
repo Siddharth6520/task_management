@@ -49,12 +49,17 @@ class ModuleSeeder extends Seeder
 
         foreach ($modules as $module) {
 
-            Module::updateOrCreate(
-                [
-                    'code' => $module['code']
-                ],
-                $module
-            );
+            try {
+                Module::updateOrCreate(
+                    [
+                        'code' => $module['code']
+                    ],
+                    $module
+                );
+            } catch (\Throwable $e) {
+                \Log::error('ModuleSeeder failed for module', ['module' => $module, 'exception' => $e->getMessage()]);
+                throw $e;
+            }
         }
 
     }

@@ -28,21 +28,21 @@ return new class extends Migration
                         'properties' => [
 
                             'role_id' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             'permission_id' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
                             'created_by' => [
-                                'bsonType' => 'objectId',
+                                'bsonType' => ['objectId', 'null'],
                                 'description' => 'Created user id'
                             ],
                             'created_at' => [
                                 'bsonType' => 'date'
                             ],
                             'updated_by' => [
-                                'bsonType' => 'objectId',
+                                'bsonType' => ['objectId', 'null'],
                                 'description' => 'Updated user id'
                             ],
                             'updated_at' => [

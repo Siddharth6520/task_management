@@ -47,11 +47,11 @@ return new class extends Migration
                             ],
 
                             'created_by' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId', 'null']
                             ],
 
                             'updated_by' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId', 'null']
                             ],
 
                             'created_at' => [

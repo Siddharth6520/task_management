@@ -4,7 +4,7 @@ namespace App\Documents;
 
 use DateTime;
 use App\Documents\User;
-use App\Documents\Tasks;
+use App\Documents\Task;
 use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 
 #[ODM\Document(collection: "task_status_histories")]
@@ -34,17 +34,17 @@ class TaskStatusHistory
     */
 
     #[ODM\ReferenceOne(
-        targetDocument: Tasks::class,
+        targetDocument: Task::class,
         storeAs: 'id'
     )]
-    private ?Tasks $task = null;
+    private ?Task $task = null;
 
-    public function getTask(): ?Tasks
+    public function getTask(): ?Task
     {
         return $this->task;
     }
 
-    public function setTask(?Tasks $task): self
+    public function setTask(?Task $task): self
     {
         $this->task = $task;
 
@@ -195,12 +195,49 @@ class TaskStatusHistory
 
 
 
-    
+    #[ODM\Field(type: "date")]
+    private ?DateTime $created_at = null;
+
+    public function getCreatedAt(): ?DateTime
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(?DateTime $created_at): self
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+
+
+    #[ODM\Field(type: "date", nullable: true)]
+    private ?DateTime $updated_at = null;
+
+    public function getUpdatedAt(): ?DateTime
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(?DateTime $updated_at): self
+    {
+        $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
 
     #[ODM\PrePersist]
     public function prePersist(): void
     {
         $this->changed_at ??= new DateTime();
+        $this->created_at ??= new DateTime();
     }
-   
+
+    #[ODM\PreUpdate]
+    public function preUpdate(): void
+    {
+        $this->updated_at = new DateTime();
+    }
 }

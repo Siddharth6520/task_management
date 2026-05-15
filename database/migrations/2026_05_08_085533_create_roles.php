@@ -43,7 +43,7 @@ return new class extends Migration
                                 'bsonType' => 'bool'
                             ],
                             'created_by' => [
-                                'bsonType' => 'objectId',
+                                'bsonType' => ['objectId', 'null'],
                                 'description' => 'Created user id'
                             ],
 
@@ -51,7 +51,7 @@ return new class extends Migration
                                 'bsonType' => 'date'
                             ],
                             'updated_by' => [
-                                'bsonType' => 'objectId',
+                                'bsonType' => ['objectId', 'null'],
                                 'description' => 'Updated user id'
                             ],
 

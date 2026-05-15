@@ -29,11 +29,11 @@ return new class extends Migration
                         'properties' => [
 
                             'module_id' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             'action_id' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             'code' => [
@@ -52,7 +52,7 @@ return new class extends Migration
                                 'bsonType' => 'bool'
                             ],
                             'created_by' => [
-                                'bsonType' => 'objectId',
+                                'bsonType' => ['objectId', 'null'],
                                 'description' => 'Created user id'
                             ],
 
@@ -60,7 +60,7 @@ return new class extends Migration
                                 'bsonType' => 'date'
                             ],
                             'updated_by' => [
-                                'bsonType' => 'objectId',
+                                'bsonType' => ['objectId', 'null'],
                                 'description' => 'Updated user id'
                             ],
 

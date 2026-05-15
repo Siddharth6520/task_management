@@ -84,7 +84,7 @@ class ProjectsController extends Controller
                 );
             }
 
-            $user = $dm->getRepository(User::class)->find($request->user()->getAuthIdentifier());
+            $user = $request->attributes->get('auth_user');
             $project = new Project();
 
             $project->setProjectCode($request->project_code);
@@ -216,8 +216,7 @@ class ProjectsController extends Controller
                 $project->setIsActive($request->boolean('is_active'));
             }
 
-            $user = $dm->getRepository(User::class)->find($request->user()->getAuthIdentifier());
-
+            $user = $request->attributes->get('auth_user');
             $project->setUpdatedBy($user);
             $project->setUpdatedAt(new DateTime());
 

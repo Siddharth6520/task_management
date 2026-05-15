@@ -4,7 +4,7 @@ namespace App\Documents;
 
 use DateTime;
 use App\Documents\User;
-use App\Documents\Tasks;
+use App\Documents\Task;
 use App\Documents\Department;
 use App\Documents\WorkStage;
 use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
@@ -35,17 +35,17 @@ class WorkFlowTransition
     */
 
     #[ODM\ReferenceOne(
-        targetDocument: Tasks::class,
+        targetDocument: Task::class,
         storeAs: 'id'
     )]
-    private ?Tasks $task = null;
+    private ?Task $task = null;
 
-    public function getTask(): ?Tasks
+    public function getTask(): ?Task
     {
         return $this->task;
     }
 
-    public function setTask(?Tasks $task): self
+    public function setTask(?Task $task): self
     {
         $this->task = $task;
 

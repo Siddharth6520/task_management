@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Documents\Tasks;
+use App\Documents\Task;
 use App\Documents\Department;
 use App\Documents\Project;
 use App\Documents\TaskStatusHistory;
@@ -22,16 +22,16 @@ use Illuminate\Support\Facades\Storage;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 
-class TasksController extends Controller
+class TaskController extends Controller
 {
 
     public function index(DocumentManager $dm)
     {
-        $tasks = $dm->getRepository(Tasks::class)->findAll();
+        $Task = $dm->getRepository(Task::class)->findAll();
 
         $result = [];
 
-        foreach ($tasks as $task) {
+        foreach ($Task as $task) {
 
             $attachments = [];
 
@@ -119,7 +119,7 @@ class TasksController extends Controller
             true,
             200,
             $result,
-            "Tasks retrieved successfully"
+            "Task retrieved successfully"
         );
     }
 
@@ -222,7 +222,7 @@ class TasksController extends Controller
                 );
             }
 
-            $task = new Tasks();
+            $task = new Task();
 
             $task->setTaskCode($request->task_code);
 
@@ -313,7 +313,7 @@ class TasksController extends Controller
      */
     public function show(string $id, DocumentManager $dm)
     {
-        $task = $dm->getRepository(Tasks::class)->find($id);
+        $task = $dm->getRepository(Task::class)->find($id);
 
         if (!$task) {
 
@@ -448,7 +448,7 @@ class TasksController extends Controller
         try {
 
             $task = $dm
-                ->getRepository(Tasks::class)
+                ->getRepository(Task::class)
                 ->find($id);
 
             if (!$task) {
@@ -737,7 +737,7 @@ class TasksController extends Controller
         try {
 
             $task = $dm
-                ->getRepository(Tasks::class)
+                ->getRepository(Task::class)
                 ->find($id);
 
             if (!$task) {

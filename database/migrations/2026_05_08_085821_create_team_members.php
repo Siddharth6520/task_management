@@ -30,23 +30,23 @@ return new class extends Migration
                         'properties' => [
 
                             'team_id' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             'user_id' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             'department_id' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             'role_id' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             'reporting_manager_id' => [
-                                'bsonType' => 'objectId' //optional
+                                'bsonType' => ['objectId'] //optional
                             ],
 
                             'is_active' => [
@@ -62,11 +62,11 @@ return new class extends Migration
                             ],
 
                             'created_by' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId', 'null']
                             ],
 
                             'updated_by' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId', 'null']
                             ]
                         ]
                     ]

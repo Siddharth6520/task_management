@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use DateTime;
 
 use App\Documents\User;
-use App\Documents\Tasks;
+use App\Documents\Task;
 use App\Documents\TaskExtension;
 
 use App\Helpers\CommonHelper;
@@ -38,7 +38,7 @@ class TaskExtensionController extends Controller
         try {
 
             $task = $dm
-                ->getRepository(Tasks::class)
+                ->getRepository(Task::class)
                 ->find($taskId);
 
             if (!$task) {

@@ -43,7 +43,7 @@ class WorkTemplate extends Model
 
     public function tasks()
     {
-        return $this->hasMany(Tasks::class, 'workflow_template_id');
+        return $this->hasMany(Task::class, 'workflow_template_id');
     }
 
     public function transitions()

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Documents\User;
-use App\Documents\Tasks;
+use App\Documents\Task;
 use App\Documents\Attachment;
 use App\Documents\WorkStage;
 use App\Helpers\CommonHelper;
@@ -50,7 +50,7 @@ class TaskAttachmentController extends Controller
         try {
 
             $task = $dm
-                ->getRepository(Tasks::class)
+                ->getRepository(Task::class)
                 ->find($taskId);
 
             if (!$task) {
@@ -99,7 +99,7 @@ class TaskAttachmentController extends Controller
             $file = $request->file('file');
 
             $path = $file->store(
-                "tasks/{$task->getId()}/attachments",
+                "Task/{$task->getId()}/attachments",
                 'public'
             );
 
@@ -171,7 +171,7 @@ class TaskAttachmentController extends Controller
         try {
 
             $task = $dm
-                ->getRepository(Tasks::class)
+                ->getRepository(Task::class)
                 ->find($taskId);
 
             if (!$task) {

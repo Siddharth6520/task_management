@@ -11,8 +11,8 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\TeamMemberController;
-use App\Http\Controllers\WorkflowTemplateController;
-use App\Http\Controllers\WorkflowStageController;
+use App\Http\Controllers\WorkTemplateController;
+use App\Http\Controllers\WorkStagesController;
 use App\Http\Controllers\TasksController;
 use App\Http\Controllers\TaskStatusHistoryController;
 use App\Http\Controllers\TaskExtensionController;
@@ -35,18 +35,12 @@ Route::prefix('users')->group(function () {
 });
 
 
-Route::middleware('jwt.auth')->group(function () {
+Route::middleware(\App\Http\Middleware\JwtMiddleware::class)->group(function () {
 
 
     Route::get('/me', [AuthController::class, 'me']);
-
     Route::post('/refresh', [AuthController::class, 'refresh']);
-
     Route::post('/logout', [AuthController::class, 'logout']);
-
-
-
-
 
 
 
@@ -120,36 +114,34 @@ Route::middleware('jwt.auth')->group(function () {
 
     //workflow templates    
 
-    // Route::prefix('workflow-templates')->group(function () {
+    Route::prefix('workflow-templates')->group(function () {
 
-    //     Route::get('/', [WorkflowTemplateController::class, 'index']);
+        Route::get('/', [WorkTemplateController::class, 'index']);
 
-    //     Route::post('/', [WorkflowTemplateController::class, 'store']);
+        Route::post('/', [WorkTemplateController::class, 'store']);
 
-    //     Route::get('/{id}', [WorkflowTemplateController::class, 'show']);
+        Route::get('/{id}', [WorkTemplateController::class, 'show']);
 
-    //     Route::put('/{id}', [WorkflowTemplateController::class, 'update']);
+        Route::put('/{id}', [WorkTemplateController::class, 'update']);
 
-    //     Route::delete('/{id}', [WorkflowTemplateController::class, 'destroy']);
-
-    // });
+        Route::delete('/{id}', [WorkTemplateController::class, 'destroy']);
+    });
 
 
 
     //workflow stages   
-    // Route::prefix('workflow-stages')->group(function () {
+    Route::prefix('workflow-stages')->group(function () {
 
-    //     Route::get('/', [WorkflowStageController::class, 'index']);
+        Route::get('/', [WorkStagesController::class, 'index']);
 
-    //     Route::post('/', [WorkflowStageController::class, 'store']);
+        Route::post('/', [WorkStagesController::class, 'store']);
 
-    //     Route::get('/{id}', [WorkflowStageController::class, 'show']);
+        Route::get('/{id}', [WorkStagesController::class, 'show']);
 
-    //     Route::put('/{id}', [WorkflowStageController::class, 'update']);
+        Route::put('/{id}', [WorkStagesController::class, 'update']);
 
-    //     Route::delete('/{id}', [WorkflowStageController::class, 'destroy']);
-
-    // });
+        Route::delete('/{id}', [WorkStagesController::class, 'destroy']);
+    });
 
 
 

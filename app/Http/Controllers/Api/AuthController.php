@@ -20,52 +20,59 @@ class AuthController extends Controller
     }
 
     public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required',
-            'password' => 'required'
+{
+    $request->validate([
+        'email' => 'required',
+        'password' => 'required'
+    ]);
+
+    $user = $this->dm
+        ->getRepository(User::class)
+        ->findOneBy([
+            'email' => $request->email
         ]);
 
-        $user = $this->dm
-            ->getRepository(User::class)
-            ->findOneBy([
-                'email' => $request->email
-            ]);
-
-        if (!$user) {
-            return CommonHelper::response(
-                false,
-                404,
-                null,
-                'User not found'
-            );
-        }
-        // dd($request->password, $user->getPassword());
-        if (!password_verify($request->password, $user->getPassword())) {
-            return CommonHelper::response(
-                false,
-                401,
-                null,
-                'Invalid password'
-            );
-        }
-
-        $token = JWTAuth::fromUser($user);
+    if (!$user) {
 
         return CommonHelper::response(
-            true,
-            200,
-            [
-                'token' => $token,
-                'user' => [
-                    'id' => $user->getId(),
-                    'name' => $user->getName(),
-                    'email' => $user->getEmail()
-                ]
-            ],
-            'Login successful'
+            false,
+            404,
+            null,
+            'User not found'
         );
     }
+
+    if (!password_verify(
+        $request->password,
+        $user->getPassword()
+    )) {
+
+        return CommonHelper::response(
+            false,
+            401,
+            null,
+            'Invalid password'
+        );
+    }
+
+    $token = JWTAuth::claims([
+        'sub' => $user->getId()
+    ])->fromUser($user);
+
+    return CommonHelper::response(
+        true,
+        200,
+        [
+            'token' => $token,
+            'user' => [
+                'id' => $user->getId(),
+                'name' => $user->getName(),
+                'email' => $user->getEmail()
+            ]
+        ],
+        'Login successful'
+    );
+}
 
     public function refresh()
     {
@@ -116,41 +123,35 @@ class AuthController extends Controller
             );
         }
     }
-    public function me()
-    {
-        try {
+    public function me(Request $request)
+{
+    try {
 
-            $payload = JWTAuth::parseToken()->getPayload();
+        $user = $request->attributes->get('auth_user');
 
-            $userId = $payload->get('sub');
+        return CommonHelper::response(
+            true,
+            200,
+            [
+                'user' => [
+                    'id' => $user->getId(),
+                    'name' => $user->getName(),
+                    'email' => $user->getEmail(),
+                ]
+            ],
+            'User fetched successfully'
+        );
 
-            $user = $this->dm
-                ->getRepository(User::class)
-                ->find($userId);
+    } catch (\Exception $e) {
 
-            return CommonHelper::response(
-                true,
-                200,
-                [
-                    'user' => [
-                        'id' => $user->getId(),
-                        'name' => $user->getName(),
-                        'email' => $user->getEmail(),
-                    ]
-                ],
-                'User fetched successfully'
-            );
-
-        } catch (\Exception $e) {
-
-            return CommonHelper::response(
-                false,
-                401,
-                null,
-                'Unauthorized'
-            );
-        }
+        return CommonHelper::response(
+            false,
+            401,
+            null,
+            'Unauthorized'
+        );
     }
+}
 }
 
 
