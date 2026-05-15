@@ -7,6 +7,7 @@ use App\Documents\Department;
 use App\Documents\Project;
 use App\Documents\TaskStatusHistory;
 use App\Documents\User;
+use App\Documents\WorkFlowTemplate;
 use App\Documents\WorkTemplate;
 use App\Documents\WorkStage;
 
@@ -190,7 +191,7 @@ class TasksController extends Controller
             }
 
             $workflowTemplate = $dm
-                ->getRepository(WorkTemplate::class)
+                ->getRepository(WorkFlowTemplate::class)
                 ->find($request->workflow_template_id);
 
             if (!$workflowTemplate) {
@@ -530,7 +531,7 @@ class TasksController extends Controller
             if ($request->filled('workflow_template_id')) {
 
                 $workflowTemplate = $dm
-                    ->getRepository(WorkTemplate::class)
+                    ->getRepository(WorkFlowTemplate::class)
                     ->find($request->workflow_template_id);
 
                 if (!$workflowTemplate) {

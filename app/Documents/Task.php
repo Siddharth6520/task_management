@@ -191,18 +191,18 @@ class Tasks
 
 
     #[ODM\ReferenceOne(
-        targetDocument: WorkTemplate::class,
+        targetDocument: WorkFlowTemplate::class,
         storeAs: 'id',
         name: 'workflow_template_id'
     )]
-    private ?WorkTemplate $workflow_template = null;
+    private ?WorkFlowTemplate $workflow_template = null;
 
-    public function getWorkflowTemplate(): ?WorkTemplate
+    public function getWorkflowTemplate(): ?WorkFlowTemplate
     {
         return $this->workflow_template;
     }
 
-    public function setWorkflowTemplate(?WorkTemplate $workflow_template): self
+    public function setWorkflowTemplate(?WorkFlowTemplate $workflow_template): self
     {
         $this->workflow_template = $workflow_template;
 
