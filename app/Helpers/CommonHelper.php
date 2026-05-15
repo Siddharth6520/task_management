@@ -14,20 +14,12 @@ class CommonHelper
         $response = [
             'success' => $success,
             'code' => $code,
-
+            'data' => $data,
+            'message' => $message,
             'server_time' => now()->format('Y-m-d H:i:s'),
             'timezone' => config('app.timezone'),
         ];
-
-        // if ($success) {
-
-            $response['data'] = $data;
-
-        // } else {
-
-            $response['message'] = $message;
-        // }
-
+        
         return response()->json(
             $response,
             $code

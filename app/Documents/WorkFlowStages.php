@@ -6,8 +6,8 @@ use DateTime;
 use App\Documents\Role;
 use App\Documents\User;
 use App\Documents\Department;
-use App\Documents\WorkFlowTemplate;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use App\Documents\WorkTemplate;
+use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 
 #[ODM\Document(collection: "workflow_stages")]
 #[ODM\Index(keys: [
@@ -37,7 +37,7 @@ class WorkStage
     | Workflow Template
     |--------------------------------------------------------------------------
     */
-
+//template-web id-1 ui-1->backend-2->frontend-3->qa-4->delivery-5
     #[ODM\ReferenceOne(
         targetDocument: WorkFlowTemplate::class,
         storeAs: 'id'
@@ -79,7 +79,8 @@ class WorkStage
         return $this;
     }
 
-
+//template :- name:-web flow, code:- WEB, description:- when doing web developmnet
+//stage:- ui-1->backend-2->frontend-3->qa-4->delivery-5
 
     #[ODM\Field(type: "int")]
     private int $stage_order;

@@ -4,7 +4,7 @@ namespace App\Documents;
 
 use DateTime;
 use App\Documents\User;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 
 #[ODM\Document(collection: "teams")]
 #[ODM\Index(keys: ['code' => 'asc'], unique: true)]
@@ -17,8 +17,6 @@ class Team
     {
         return $this->id;
     }
-
-
 
     #[ODM\Field(type: "string")]
     private string $name;
@@ -35,8 +33,6 @@ class Team
         return $this;
     }
 
-
-
     #[ODM\Field(type: "string")]
     private string $code;
 
@@ -52,8 +48,6 @@ class Team
         return $this;
     }
 
-
-
     #[ODM\Field(type: "string", nullable: true)]
     private ?string $description = null;
 
@@ -67,26 +61,6 @@ class Team
         $this->description = $description
             ? trim($description)
             : null;
-
-        return $this;
-    }
-
-
-
-    #[ODM\ReferenceOne(
-        targetDocument: User::class,
-        storeAs: 'id'
-    )]
-    private ?User $team_lead = null;
-
-    public function getTeamLead(): ?User
-    {
-        return $this->team_lead;
-    }
-
-    public function setTeamLead(?User $team_lead): self
-    {
-        $this->team_lead = $team_lead;
 
         return $this;
     }
