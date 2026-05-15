@@ -10,9 +10,15 @@ use App\Documents\WorkStage;
 use App\Documents\Attachment;
 use App\Documents\WorkTemplate;
 use App\Documents\TaskStatusHistory;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
+
+
 
 #[ODM\Document(collection: "tasks")]
+
+#[ODM\HasLifecycleCallbacks]
+
+
 #[ODM\Index(keys: [
     'current_department' => 'asc'
 ])]
@@ -125,7 +131,8 @@ class Tasks
 
     #[ODM\ReferenceOne(
         targetDocument: Department::class,
-        storeAs: 'id'
+        storeAs: 'id',
+        name: 'current_department_id'
     )]
     private ?Department $current_department = null;
 
@@ -145,7 +152,8 @@ class Tasks
 
     #[ODM\ReferenceOne(
         targetDocument: User::class,
-        storeAs: 'id'
+        storeAs: 'id',
+        name: 'current_assignee_id'
     )]
     private ?User $current_assignee = null;
 
@@ -165,7 +173,8 @@ class Tasks
 
     #[ODM\ReferenceOne(
         targetDocument: WorkTemplate::class,
-        storeAs: 'id'
+        storeAs: 'id',
+        name: 'workflow_template_id'
     )]
     private ?WorkTemplate $workflow_template = null;
 
@@ -185,7 +194,8 @@ class Tasks
 
     #[ODM\ReferenceOne(
         targetDocument: WorkStage::class,
-        storeAs: 'id'
+        storeAs: 'id',
+        name: 'current_workflow_stage_id'
     )]
     private ?WorkStage $current_workflow_stage = null;
 
@@ -310,9 +320,9 @@ class Tasks
         return $this->original_due_at;
     }
 
-    public function setOriginalDueAt(?DateTime $original_due_at): self
+    public function setOriginalDueAt(?DateTime $due_at): self
     {
-        $this->original_due_at = $original_due_at;
+        $this->original_due_at = $due_at;
 
         return $this;
     }
@@ -407,7 +417,8 @@ class Tasks
 
     #[ODM\ReferenceOne(
         targetDocument: User::class,
-        storeAs: 'id'
+        storeAs: 'id',
+        name: 'created_by'
     )]
     private ?User $created_by = null;
 
@@ -428,6 +439,7 @@ class Tasks
     #[ODM\ReferenceOne(
         targetDocument: User::class,
         storeAs: 'id',
+        name: 'updated_by',
         nullable: true
     )]
     private ?User $updated_by = null;
@@ -476,5 +488,17 @@ class Tasks
         $this->updated_at = $updated_at;
 
         return $this;
+    }
+
+
+    #[ODM\PrePersist]
+    public function prePersist(): void
+    {
+        $this->created_at = new DateTime();
+    }
+    #[ODM\PreUpdate]
+    public function preUpdate():void
+    {
+        $this->updated_at = new DateTime();
     }
 }

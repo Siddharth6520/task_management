@@ -2,8 +2,7 @@
 
 namespace App\Documents;
 
-use Illuminate\Support\Facades\Hash;
-use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -73,11 +72,11 @@ class User implements AuthenticatableContract, JWTSubject
 
         return $this;
     }
-    public function getMobileNo(): string{
+
+    public function getMobileNo(): string
+    {
         return $this->mobile_no;
     }
-
-
 
     #[ODM\Field(type: "string")]
     private string $username;
@@ -98,7 +97,11 @@ class User implements AuthenticatableContract, JWTSubject
     private string $password;
     public function setPassword(string $password): self
     {
-        $this->password = Hash::make($password);
+        $this->password = password_hash(
+            $password,
+            PASSWORD_BCRYPT
+        );
+
         return $this;
     }
 
@@ -106,6 +109,7 @@ class User implements AuthenticatableContract, JWTSubject
     {
         return $this->password;
     }
+
 
 
     #[ODM\Field(type: "bool")]

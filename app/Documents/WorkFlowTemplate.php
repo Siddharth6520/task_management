@@ -4,7 +4,9 @@ namespace App\Documents;
 
 use DateTime;
 use App\Documents\User;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
+use DateTimeInterface;
+use MongoDB\BSON\ObjectId;
 
 #[ODM\Document(collection: "workflow_templates")]
 #[ODM\Index(keys: [
@@ -13,14 +15,14 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 #[ODM\UniqueIndex(keys: [
     'code' => 'asc'
 ])]
-class WorkTemplate
+class WorkFlowTemplate
 {
     #[ODM\Id]
-    private string $id;
+    private ?string $id = null;
 
-    public function getId(): string
+    public function getId(): ?string
     {
-        return $this->id;
+    return $this->id;
     }
 
 
@@ -118,7 +120,6 @@ class WorkTemplate
     public function setIsDefault(bool $is_default): self
     {
         $this->is_default = $is_default;
-
         return $this;
     }
 
@@ -129,78 +130,89 @@ class WorkTemplate
     | Audit
     |--------------------------------------------------------------------------
     */
+    
+     #[ODM\ReferenceOne(
+        targetDocument: User::class,
+        storeAs: 'id',
+    )]
+    private ?User $created_by = null;
 
     #[ODM\ReferenceOne(
         targetDocument: User::class,
         storeAs: 'id',
-        nullable: true
     )]
-    private ?User $created_by = null;
+    private ?User $updated_by = null;
 
-    public function getCreatedBy(): ?User
+
+    public function setCreatedBy(?string $userId): self
+    {
+        $this->created_by;
+
+        return $this;
+    }
+
+    public function setUpdatedBy(?string $userId): self
+    {
+        $this->updated_by;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?string
     {
         return $this->created_by;
     }
 
-    public function setCreatedBy(?User $user): self
-    {
-        $this->created_by = $user;
-
-        return $this;
-    }
-
-
-
-    #[ODM\ReferenceOne(
-        targetDocument: User::class,
-        storeAs: 'id',
-        nullable: true
-    )]
-    private ?User $updated_by = null;
-
-    public function getUpdatedBy(): ?User
+    public function getUpdatedBy(): ?string
     {
         return $this->updated_by;
     }
 
-    public function setUpdatedBy(?User $user): self
-    {
-        $this->updated_by = $user;
-
-        return $this;
-    }
-
 
 
     #[ODM\Field(type: "date", nullable: true)]
-    private ?DateTime $created_at = null;
+    private ?\DateTimeInterface $created_at = null;
 
-    public function getCreatedAt(): ?DateTime
+    public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(?DateTime $created_at): self
+    public function setCreatedAt(?DateTimeInterface $created_at): self
     {
-        $this->created_at = $created_at;
-
-        return $this;
+    $this->created_at = $created_at;
+    return $this;
     }
 
 
 
     #[ODM\Field(type: "date", nullable: true)]
-    private ?DateTime $updated_at = null;
+    private ?\DateTimeInterface $updated_at = null;
 
-    public function getUpdatedAt(): ?DateTime
+    public function getUpdatedAt(): ?DateTimeInterface
     {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(?DateTime $updated_at): self
+    public function setUpdatedAt(?DateTimeInterface $updated_at): self
     {
-        $this->updated_at = $updated_at;
+    $this->updated_at = $updated_at;
+    return $this;
+    } 
 
-        return $this;
-    }
+    public function toArray(): array
+{
+    return [
+        'id' => $this->getId(),
+        'name' => $this->getName(),
+        'code' => $this->getCode(),
+        'description' => $this->getDescription(),
+        'is_active' => $this->isActive(),
+        'is_default' => $this->isDefault(),
+        'created_by' => $this->getCreatedBy(),
+        'updated_by' => $this->getUpdatedBy(),
+        'created_at' => $this->getCreatedAt()?->format('Y-m-d H:i:s'),
+        'updated_at' => $this->getUpdatedAt()?->format('Y-m-d H:i:s'),
+    ];
+}
 }
