@@ -89,10 +89,14 @@ class ProjectsController extends Controller
 
             $project->setProjectCode($request->project_code);
             $project->setName($request->name);
-            $project->setDescription($request->description);
+
+            if ($request->exists('description')) {
+                $project->setDescription($request->description);
+            }
+
             $project->setIsActive($request->input('is_active', true));
             $project->setCreatedBy($user);
-            $project->setCreatedAt(new DateTime());
+            // $project->setCreatedAt(new DateTime());
 
             $dm->persist($project);
             $dm->flush();
@@ -208,7 +212,7 @@ class ProjectsController extends Controller
                 $project->setName($request->name);
             }
 
-            if ($request->has('description')) {
+            if ($request->exists('description')) {
                 $project->setDescription($request->description);
             }
 
@@ -218,7 +222,7 @@ class ProjectsController extends Controller
 
             $user = $request->attributes->get('auth_user');
             $project->setUpdatedBy($user);
-            $project->setUpdatedAt(new DateTime());
+            // $project->setUpdatedAt(new DateTime());
 
             $dm->flush();
 

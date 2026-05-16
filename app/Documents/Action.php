@@ -27,6 +27,11 @@ class Action
 
     #[ODM\Field(type: "string")]
     private string $name;
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
     public function setName(string $name): self
     {
         $this->name = trim($name);

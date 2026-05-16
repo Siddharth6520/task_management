@@ -3,64 +3,49 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-
-use App\Models\Module;
+use App\Documents\Module;
+use Doctrine\ODM\MongoDB\DocumentManager;
 
 class ModuleSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
+        $dm = app(DocumentManager::class);
+
+        $repo = $dm->getRepository(Module::class);
+
         $modules = [
-
             [
-                'name' => 'Tasks',
-                'code' => 'TASKS',
-                'description' => 'Task management module    '
+                'name' => 'Project',
+                'code' => 'PROJECT',
+                'description' => 'Project module',
             ],
-
             [
-                'name' => 'Projects',
-                'code' => 'PROJECTS',
-                'description' => 'Project management module'
+                'name' => 'Task',
+                'code' => 'TASK',
+                'description' => 'Task module',
             ],
-
             [
-                'name' => 'Users',
-                'code' => 'USERS',
-                'description' => 'User management module'
+                'name' => 'User',
+                'code' => 'USER',
+                'description' => 'User module',
             ],
-
-            [
-                'name' => 'Workflows',
-                'code' => 'WORKFLOWS',
-                'description' => 'Workflow management module'
-            ],
-
-            [
-                'name' => 'Reports',
-                'code' => 'REPORTS',
-                'description' => 'Reports and analytics module'
-            ],
-
         ];
 
-        foreach ($modules as $module) {
+        foreach ($modules as $moduleData) {
 
-            try {
-                Module::updateOrCreate(
-                    [
-                        'code' => $module['code']
-                    ],
-                    $module
-                );
-            } catch (\Throwable $e) {
-                \Log::error('ModuleSeeder failed for module', ['module' => $module, 'exception' => $e->getMessage()]);
-                throw $e;
-            }
+            $module = $repo->findOneBy([
+                'code' => $moduleData['code']
+            ]) ?? new Module();
+
+            $module
+                ->setName($moduleData['name'])
+                ->setCode($moduleData['code'])
+                ->setDescription($moduleData['description']);
+
+            $dm->persist($module);
         }
 
+        $dm->flush();
     }
 }

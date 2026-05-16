@@ -26,53 +26,52 @@ return new class extends Migration
                         'properties' => [
 
                             'project_code' => [
-                                'bsonType' => 'string',
-                                'description' => 'Unique project code'
+                                'bsonType' => 'string'
                             ],
 
                             'name' => [
-                                'bsonType' => 'string',
-                                'description' => 'Project name'
+                                'bsonType' => 'string'
                             ],
 
                             'description' => [
-                                'bsonType' => 'string',
-                                'description' => 'Project description'
+                                'bsonType' => ['string', 'null']
                             ],
 
                             'is_active' => [
-                                'bsonType' => 'bool',
-                                'description' => 'Project active status'
+                                'bsonType' => 'bool'
                             ],
 
                             'created_by' => [
-                                'bsonType' => ['objectId', 'null'],
-                                'description' => 'Created user id'
+                                'bsonType' => ['objectId', 'null']
                             ],
 
                             'updated_by' => [
-                                'bsonType' => ['objectId', 'null'],
-                                'description' => 'Updated user id'
+                                'bsonType' => ['objectId', 'null']
                             ],
 
                             'created_at' => [
-                                'bsonType' => 'date'
+                                'bsonType' => ['date', 'null']
                             ],
 
                             'updated_at' => [
-                                'bsonType' => 'date'
+                                'bsonType' => ['date', 'null']
                             ]
                         ]
                     ]
                 ]
             ]
         );
-         DB::connection('mongodb')
+
+        DB::connection('mongodb')
             ->getMongoDB()
             ->selectCollection('projects')
             ->createIndex(
-                ['project_code' => 1],
-                ['unique' => true]
+                [
+                    'project_code' => 1
+                ],
+                [
+                    'unique' => true
+                ]
             );
     }
 

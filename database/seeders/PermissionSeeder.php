@@ -4,59 +4,75 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-use App\Models\Permission;
-use App\Models\Module;
-use App\Models\Action;
+use App\Documents\Action;
+use App\Documents\Module;
+use App\Documents\Permission;
+
+use Doctrine\ODM\MongoDB\DocumentManager;
 
 class PermissionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $modules = Module::all();
-        $actions = Action::all();
+        $dm = app(DocumentManager::class);
 
-        $permissions = [];
+        $moduleRepo = $dm->getRepository(Module::class);
+        $actionRepo = $dm->getRepository(Action::class);
+        $permissionRepo = $dm->getRepository(Permission::class);
+
+        $modules = $moduleRepo->findAll();
+        $actions = $actionRepo->findAll();
 
         foreach ($modules as $module) {
 
             foreach ($actions as $action) {
 
-                $permissions[] = [
+                try {
 
-                    'module_id' => $module->_id,
-                    'action_id' => $action->_id,
+                    $code = strtoupper(
+                        $module->getCode() . '_' . $action->getCode()
+                    );
 
-                    'name' =>
-                        ucfirst(strtolower($module->name)) . ' ' .
-                        ucfirst(strtolower($action->name)),
+                    $permission = $permissionRepo->findOneBy([
+                        'code' => $code
+                    ]) ?? new Permission();
 
-                    'code' =>
-                        strtoupper($module->code . '_' . $action->code),
+                    $permission->setModule($module);
 
-                    'description' =>
-                        "Permission to {$action->name} {$module->name}",
+                    $permission->setAction($action);
 
-                    'is_active' => true,
-                ];
+                    $permission->setName(
+                        ucfirst(strtolower($module->getName()))
+                        . ' ' .
+                        ucfirst(strtolower($action->getName()))
+                    );
+
+                    $permission->setCode($code);
+
+                    $permission->setDescription(
+                        "Permission to {$action->getName()} {$module->getName()}"
+                    );
+
+                    $permission->setIsActive(true);
+
+                    $dm->persist($permission);
+
+                } catch (\Throwable $e) {
+
+                    \Log::error(
+                        'PermissionSeeder failed',
+                        [
+                            'module' => $module->getCode(),
+                            'action' => $action->getCode(),
+                            'exception' => $e->getMessage()
+                        ]
+                    );
+
+                    throw $e;
+                }
             }
         }
 
-        foreach ($permissions as $permission) {
-
-            try {
-                Permission::updateOrCreate(
-                    [
-                        'code' => $permission['code']
-                    ],
-                    $permission
-                );
-            } catch (\Throwable $e) {
-                \Log::error('PermissionSeeder failed for permission', ['permission' => $permission, 'exception' => $e->getMessage()]);
-                throw $e;
-            }
-        }
+        $dm->flush();
     }
 }
