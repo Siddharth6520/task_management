@@ -20,10 +20,9 @@ return new class extends Migration
 
                         'required' => [
                             'task_id',
-                            'from_status',
                             'to_status',
-                            'changed_by',
-                            'changed_at'
+                            'changed_at',
+                            'created_at'
                         ],
 
                         'properties' => [
@@ -33,6 +32,19 @@ return new class extends Migration
                             ],
 
                             'from_status' => [
+                                'bsonType' => ['string', 'null'],
+                                'enum' => [
+                                    'opened',
+                                    'in_progress',
+                                    'on_hold',
+                                    'completed',
+                                    'cancelled',
+                                    null
+                                ]
+                            ],
+
+                            'to_status' => [
+                                'bsonType' => 'string',
                                 'enum' => [
                                     'opened',
                                     'in_progress',
@@ -42,23 +54,16 @@ return new class extends Migration
                                 ]
                             ],
 
-                            'to_status' => [
-                                'enum' => [
-                                    'todo',
-                                    'in_progress',
-                                    'on_hold',
-                                    'completed',
-                                    'cancelled'
-                                ]
+                            'remarks' => [
+                                'bsonType' => ['string', 'null']
                             ],
 
                             'hold_duration_seconds' => [
-                                'bsonType' => 'long',
-                                'minimum' => 0
+                                'bsonType' => 'int'
                             ],
 
-                            'remarks' => [
-                                'bsonType' => 'string'
+                            'updated_at' => [
+                                'bsonType' => ['date', 'null']
                             ],
 
                             'changed_by' => [
@@ -70,10 +75,6 @@ return new class extends Migration
                             ],
 
                             'created_at' => [
-                                'bsonType' => 'date'
-                            ],
-
-                            'updated_at' => [
                                 'bsonType' => 'date'
                             ]
                         ]

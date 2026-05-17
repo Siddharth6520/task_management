@@ -41,11 +41,11 @@ return new class extends Migration
                             ],
 
                             'description' => [
-                                'bsonType' => 'string'
+                                'bsonType' => ['string', 'null']
                             ],
 
                             'project_id' => [
-                                'bsonType' => ['objectId']
+                                'bsonType' => ['objectId', 'null']
                             ],
 
                             'current_department_id' => [  //1
@@ -88,16 +88,16 @@ return new class extends Migration
                                 ]
                             ],
 
-                            'started_at' => [   //May 1
-                                'bsonType' => 'date'
+                            'started_at' => [
+                                'bsonType' => ['date', 'null']
                             ],
 
-                            'due_at' => [     //Deadline given by admin like May 30
-                                'bsonType' => 'date'
+                            'due_at' => [
+                                'bsonType' => ['date', 'null']
                             ],
 
-                            'completed_at' => [  //actual completed date after extension approval - june 10
-                                'bsonType' => 'date'
+                            'completed_at' => [
+                                'bsonType' => ['date', 'null']
                             ],
 
                             // 'workflow_completed_at' => [
@@ -107,11 +107,11 @@ return new class extends Migration
 
                             //holding 
                             'current_hold_started_at' => [
-                                'bsonType' => 'date'  //holded at
+                                'bsonType' => ['date', 'null']  //holded at
                             ],
 
                             'total_hold_duration_seconds' => [
-                                'bsonType' => 'long' //when changing from onhold to inprogress again means (now - onhold) time to update
+                                'bsonType' => ['int', 'null']  //when changing from onhold to inprogress again means (now - onhold) time to update
                             ],
 
                             // 'completion_percentage' => [
@@ -121,7 +121,7 @@ return new class extends Migration
                             // ],//optional if need we will put
 
                             'original_due_at' => [
-                                'bsonType' => 'date'
+                                'bsonType' => ['date', 'null']
                             ],
 
                             'is_sla_breached' => [
@@ -145,7 +145,7 @@ return new class extends Migration
                             ],
 
                             'updated_at' => [
-                                'bsonType' => 'date'
+                                'bsonType' => ['date', 'null']
                             ]
                         ]
                     ]
@@ -195,6 +195,3 @@ return new class extends Migration
             ->dropCollection('tasks');
     }
 };
-
-
-

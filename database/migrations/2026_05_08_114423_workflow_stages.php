@@ -21,8 +21,15 @@ return new class extends Migration
 
                         'required' => [
                             'workflow_template_id',
+                            'stage_name',
                             'stage_order',
-                            'department_id'
+                            'department_id',
+                            'can_skip',
+                            'can_rework',
+                            'is_mandatory',
+                            'is_final_stage',
+                            'is_active',
+                            'created_at'
                         ],
 
                         'properties' => [
@@ -114,7 +121,7 @@ return new class extends Migration
                             ],
 
                             'updated_at' => [
-                                'bsonType' => 'date'
+                                'bsonType' => ['date', 'null']
                             ]
                         ]
                     ]

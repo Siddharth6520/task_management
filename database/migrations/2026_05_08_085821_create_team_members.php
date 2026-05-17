@@ -21,44 +21,36 @@ return new class extends Migration
                         'bsonType' => 'object',
 
                         'required' => [
-                            'team_id',
-                            'user_id',
-                            'department_id',
-                            'role_id'
+                            'team',
+                            'user',
+                            'department',
+                            // 'role'
                         ],
 
                         'properties' => [
 
-                            'team_id' => [
-                                'bsonType' => ['objectId']
+                            'team' => [
+                                'bsonType' => 'objectId'
                             ],
 
-                            'user_id' => [
-                                'bsonType' => ['objectId']
+                            'user' => [
+                                'bsonType' => 'objectId'
                             ],
 
-                            'department_id' => [
-                                'bsonType' => ['objectId']
+                            'department' => [
+                                'bsonType' => 'objectId'
                             ],
 
-                            'role_id' => [
-                                'bsonType' => ['objectId']
-                            ],
+                            // 'role' => [
+                            //     'bsonType' => 'objectId'
+                            // ],
 
-                            'reporting_manager_id' => [
-                                'bsonType' => ['objectId'] //optional
+                            'reporting_manager' => [
+                                'bsonType' => ['objectId', 'null']
                             ],
 
                             'is_active' => [
                                 'bsonType' => 'bool'
-                            ],
-
-                            'created_at' => [
-                                'bsonType' => 'date'
-                            ],
-
-                            'updated_at' => [
-                                'bsonType' => 'date'
                             ],
 
                             'created_by' => [
@@ -67,20 +59,29 @@ return new class extends Migration
 
                             'updated_by' => [
                                 'bsonType' => ['objectId', 'null']
+                            ],
+
+                            'created_at' => [
+                                'bsonType' => ['date', 'null']
+                            ],
+
+                            'updated_at' => [
+                                'bsonType' => ['date', 'null']
                             ]
                         ]
                     ]
                 ]
             ]
         );
+
         DB::connection('mongodb')
             ->getMongoDB()
             ->selectCollection('team_members')
             ->createIndex(
                 [
-                    'team_id' => 1,
-                    'user_id' => 1,
-                    'department_id' => 1
+                    'team' => 1,
+                    'user' => 1,
+                    'department' => 1
                 ],
                 ['unique' => true]
             );

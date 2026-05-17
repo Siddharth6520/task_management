@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Documents\User;
 use App\Documents\Task;
 use App\Documents\Attachment;
-use App\Documents\WorkStage;
+use App\Documents\WorkFlowStages;
 use App\Helpers\CommonHelper;
 
 use Illuminate\Http\Request;
@@ -82,7 +82,7 @@ class TaskAttachmentController extends Controller
             if ($request->filled('workflow_stage_id')) {
 
                 $workflowStage = $dm
-                    ->getRepository(WorkStage::class)
+                    ->getRepository(WorkFlowStages::class)
                     ->find($request->workflow_stage_id);
 
                 if (!$workflowStage) {

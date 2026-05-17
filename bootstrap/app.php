@@ -19,7 +19,8 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withMiddleware(function ($middleware) {
     $middleware->alias([
-        'jwt.auth' => \App\Http\Middleware\JwtMiddleware::class,
+        'jwt' => \App\Http\Middleware\JwtMiddleware::class,
+        'permission' => \App\Http\Middleware\PermissionMiddleware::class,
     ]);
 
 })->create();

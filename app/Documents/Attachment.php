@@ -5,7 +5,7 @@ namespace App\Documents;
 use DateTime;
 use App\Documents\User;
 use App\Documents\Task;
-use App\Documents\WorkStage;
+use App\Documents\WorkFlowStages;
 use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 
 #[ODM\HasLifecycleCallbacks]
@@ -53,17 +53,17 @@ class Attachment
 
 
     #[ODM\ReferenceOne(
-        targetDocument: WorkStage::class,
+        targetDocument: WorkFlowStages::class,
         storeAs: 'id'
     )]
-    private ?WorkStage $workflow_stage = null;
+    private ?WorkFlowStages $workflow_stage = null;
 
-    public function getWorkflowStage(): ?WorkStage
+    public function getWorkflowStage(): ?WorkFlowStages
     {
         return $this->workflow_stage;
     }
 
-    public function setWorkflowStage(?WorkStage $workflow_stage): self
+    public function setWorkflowStage(?WorkFlowStages $workflow_stage): self
     {
         $this->workflow_stage = $workflow_stage;
 

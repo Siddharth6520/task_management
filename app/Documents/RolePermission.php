@@ -13,6 +13,8 @@ use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
     'role' => 'asc',
     'permission' => 'asc'
 ])]
+#[ODM\HasLifecycleCallbacks]
+
 class RolePermission
 {
     #[ODM\Id]
@@ -137,5 +139,17 @@ class RolePermission
         $this->updated_at = $updated_at;
 
         return $this;
+    }
+
+    #[ODM\PrePersist]
+    public function prePersist(): void
+    {
+        $this->created_at = new DateTime();
+    }
+
+    #[ODM\PreUpdate]
+    public function preUpdate(): void
+    {
+        $this->updated_at = new DateTime();
     }
 }

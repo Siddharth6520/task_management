@@ -8,8 +8,8 @@ use App\Documents\Project;
 use App\Documents\TaskStatusHistory;
 use App\Documents\User;
 use App\Documents\WorkFlowTemplate;
-use App\Documents\WorkTemplate;
-use App\Documents\WorkStage;
+// use App\Documents\WorkTemplate;
+use App\Documents\WorkFlowStages;
 
 use App\Http\Requests\TaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
@@ -207,7 +207,7 @@ class TaskController extends Controller
             }
 
             $workflowStage = $dm
-                ->getRepository(WorkStage::class)
+                ->getRepository(WorkFlowStages::class)
                 ->find($request->current_workflow_stage_id);
 
             if (!$workflowStage) {
@@ -258,8 +258,7 @@ class TaskController extends Controller
                     clone $task->getDueAt()
                 );
             }
-            // $task->setCreatedAt(new \DateTime());
-            // $task->setUpdatedAt(new \DateTime());
+
             $task->setCreatedBy($assignee);
             $task->setUpdatedBy($assignee);
             $dm->persist($task);
@@ -552,7 +551,7 @@ class TaskController extends Controller
             if ($request->filled('current_workflow_stage_id')) {
 
                 $workflowStage = $dm
-                    ->getRepository(WorkStage::class)
+                    ->getRepository(WorkFlowStages::class)
                     ->find($request->current_workflow_stage_id);
 
                 if (!$workflowStage) {

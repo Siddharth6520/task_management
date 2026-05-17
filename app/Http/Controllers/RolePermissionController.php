@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 
+
 class RolePermissionController extends Controller
 {
     /**
@@ -57,8 +58,9 @@ class RolePermissionController extends Controller
     public function store(Request $request, DocumentManager $dm)
     {
         $validator = Validator::make($request->all(), [
-            'role_id'       => 'required|string',
-            'permission_id' => 'required|string',
+            'role_id' => 'required|string',
+            'permission_ids' => 'required|array|min:1',
+            'permission_ids.*' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -72,7 +74,8 @@ class RolePermissionController extends Controller
 
         try {
 
-            $role = $dm->getRepository(Role::class)->find($request->role_id);
+            $role = $dm->getRepository(Role::class)
+                ->find($request->role_id);
 
             if (!$role) {
                 return CommonHelper::response(
@@ -83,48 +86,69 @@ class RolePermissionController extends Controller
                 );
             }
 
-            $permission = $dm->getRepository(Permission::class)->find($request->permission_id);
+            $user = $dm->getRepository(User::class)
+                ->find($request->user()->getAuthIdentifier());
 
-            if (!$permission) {
-                return CommonHelper::response(
-                    false,
-                    404,
-                    null,
-                    "Permission not found"
-                );
+            $created = [];
+            $skipped = [];
+
+            foreach ($request->permission_ids as $permissionId) {
+
+                $permission = $dm->getRepository(Permission::class)
+                    ->find($permissionId);
+
+                if (!$permission) {
+
+                    $skipped[] = [
+                        'permission_id' => $permissionId,
+                        'reason' => 'Permission not found'
+                    ];
+
+                    continue;
+                }
+
+                $exist = $dm->getRepository(RolePermission::class)
+                    ->findOneBy([
+                        'role' => $role,
+                        'permission' => $permission
+                    ]);
+
+                if ($exist) {
+
+                    $skipped[] = [
+                        'permission_id' => $permissionId,
+                        'reason' => 'Already exists'
+                    ];
+
+                    continue;
+                }
+
+                $rolePermission = new RolePermission();
+
+                $rolePermission->setRole($role);
+                $rolePermission->setPermission($permission);
+                $rolePermission->setCreatedBy($user);
+
+                $dm->persist($rolePermission);
+
+                $created[] = [
+                    'permission_id' => $permissionId,
+                    'permission_name' => $permission->getName()
+                ];
             }
 
-            $exist = $dm->getRepository(RolePermission::class)
-                ->findOneBy([
-                    'role'       => $role->getId(),
-                    'permission' => $permission->getId(),
-                ]);
-
-            if ($exist) {
-                return CommonHelper::response(
-                    false,
-                    409,
-                    null,
-                    "Role permission already exists"
-                );
-            }
-
-            $user = $dm->getRepository(User::class)->find($request->user()->getAuthIdentifier());
-            $rolePermission = new RolePermission();
-
-            $rolePermission->setRole($role);
-            $rolePermission->setPermission($permission);
-            $rolePermission->setCreatedBy($user);
-            $rolePermission->setCreatedAt(new DateTime());
-
-            $dm->persist($rolePermission);
             $dm->flush();
 
             return CommonHelper::response(
                 true,
                 201,
-                null,
-                "Role permission created successfully"
+                [
+                    'created' => $created,
+                    'skipped' => $skipped,
+                    'total_created' => count($created),
+                    'total_skipped' => count($skipped)
+                ],
+                "Role permissions processed successfully"
             );
         } catch (\Exception $e) {
 
@@ -180,11 +204,11 @@ class RolePermissionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id, DocumentManager $dm)
+    public function update(Request $request, string $roleId, DocumentManager $dm)
     {
         $validator = Validator::make($request->all(), [
-            'role_id'       => 'sometimes|string',
-            'permission_id' => 'sometimes|string',
+            'permission_ids' => 'required|array|min:1',
+            'permission_ids.*' => 'required|string'
         ]);
 
         if ($validator->fails()) {
@@ -196,71 +220,83 @@ class RolePermissionController extends Controller
             );
         }
 
-        $rolePermission = $dm->getRepository(RolePermission::class)->find($id);
-
-        if (!$rolePermission) {
-            return CommonHelper::response(
-                false,
-                404,
-                null,
-                "Role permission not found"
-            );
-        }
-
         try {
 
-            if ($request->has('role_id')) {
+            $role = $dm->getRepository(Role::class)
+                ->find($roleId);
 
-                $role = $dm->getRepository(Role::class)->find($request->role_id);
-
-                if (!$role) {
-                    return CommonHelper::response(
-                        false,
-                        404,
-                        null,
-                        "Role not found"
-                    );
-                }
-
-                $rolePermission->setRole($role);
-            }
-
-            if ($request->has('permission_id')) {
-
-                $permission = $dm->getRepository(Permission::class)->find($request->permission_id);
-
-                if (!$permission) {
-                    return CommonHelper::response(
-                        false,
-                        404,
-                        null,
-                        "Permission not found"
-                    );
-                }
-
-                $rolePermission->setPermission($permission);
-            }
-
-            $exist = $dm->createQueryBuilder(RolePermission::class)
-                ->field('role')->equals($rolePermission->getRole()->getId())
-                ->field('permission')->equals($rolePermission->getPermission()->getId())
-                ->field('id')->notEqual($id)
-                ->getQuery()
-                ->getSingleResult();
-
-            if ($exist) {
+            if (!$role) {
                 return CommonHelper::response(
                     false,
-                    409,
+                    404,
                     null,
-                    "Role permission already exists"
+                    "Role not found"
                 );
             }
 
-            $user = $dm->getRepository(User::class)->find($request->user()->getAuthIdentifier());
+            $user = $dm->getRepository(User::class)
+                ->find($request->user()->getAuthIdentifier());
 
-            $rolePermission->setUpdatedBy($user);
-            $rolePermission->setUpdatedAt(new DateTime());
+            $existingMappings = $dm->getRepository(RolePermission::class)
+                ->findBy([
+                    'role' => $role
+                ]);
+
+            $existingPermissionIds = [];
+
+            foreach ($existingMappings as $mapping) {
+                $existingPermissionIds[] =
+                    $mapping->getPermission()->getId();
+            }
+
+            $newPermissionIds = $request->permission_ids;
+
+            /*
+        Delete removed permissions
+        */
+
+            foreach ($existingMappings as $mapping) {
+
+                if (
+                    !in_array(
+                        $mapping->getPermission()->getId(),
+                        $newPermissionIds
+                    )
+                ) {
+                    $dm->remove($mapping);
+                }
+            }
+
+            /*
+        Add newly selected permissions
+        */
+
+            foreach ($newPermissionIds as $permissionId) {
+
+                if (
+                    in_array(
+                        $permissionId,
+                        $existingPermissionIds
+                    )
+                ) {
+                    continue;
+                }
+
+                $permission = $dm->getRepository(Permission::class)
+                    ->find($permissionId);
+
+                if (!$permission) {
+                    continue;
+                }
+
+                $rolePermission = new RolePermission();
+
+                $rolePermission->setRole($role);
+                $rolePermission->setPermission($permission);
+                $rolePermission->setCreatedBy($user);
+
+                $dm->persist($rolePermission);
+            }
 
             $dm->flush();
 
@@ -268,7 +304,7 @@ class RolePermissionController extends Controller
                 true,
                 200,
                 null,
-                "Role permission updated successfully"
+                "Role permissions updated successfully"
             );
         } catch (\Exception $e) {
 

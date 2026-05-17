@@ -5,13 +5,14 @@ namespace App\Documents;
 use DateTime;
 use App\Documents\User;
 use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
-use DateTimeInterface;
-use MongoDB\BSON\ObjectId;
 
 #[ODM\Document(collection: "workflow_templates")]
+#[ODM\HasLifecycleCallbacks]
+
 #[ODM\Index(keys: [
     'is_active' => 'asc'
 ])]
+
 #[ODM\UniqueIndex(keys: [
     'code' => 'asc'
 ])]
@@ -22,9 +23,8 @@ class WorkFlowTemplate
 
     public function getId(): ?string
     {
-    return $this->id;
+        return $this->id;
     }
-
 
 
     /*
@@ -85,7 +85,6 @@ class WorkFlowTemplate
     }
 
 
-
     /*
     |--------------------------------------------------------------------------
     | Status
@@ -120,9 +119,9 @@ class WorkFlowTemplate
     public function setIsDefault(bool $is_default): self
     {
         $this->is_default = $is_default;
+
         return $this;
     }
-
 
 
     /*
@@ -130,89 +129,141 @@ class WorkFlowTemplate
     | Audit
     |--------------------------------------------------------------------------
     */
-    
-     #[ODM\ReferenceOne(
-        targetDocument: User::class,
-        storeAs: 'id',
-    )]
-    private ?User $created_by = null;
 
     #[ODM\ReferenceOne(
         targetDocument: User::class,
         storeAs: 'id',
+        nullable: true
     )]
-    private ?User $updated_by = null;
+    private ?User $created_by = null;
 
-
-    public function setCreatedBy(?string $userId): self
-    {
-        $this->created_by;
-
-        return $this;
-    }
-
-    public function setUpdatedBy(?string $userId): self
-    {
-        $this->updated_by;
-
-        return $this;
-    }
-
-    public function getCreatedBy(): ?string
+    public function getCreatedBy(): ?User
     {
         return $this->created_by;
     }
 
-    public function getUpdatedBy(): ?string
+    public function setCreatedBy(?User $user): self
+    {
+        $this->created_by = $user;
+
+        return $this;
+    }
+
+
+
+    #[ODM\ReferenceOne(
+        targetDocument: User::class,
+        storeAs: 'id',
+        nullable: true
+    )]
+    private ?User $updated_by = null;
+
+    public function getUpdatedBy(): ?User
     {
         return $this->updated_by;
     }
 
+    public function setUpdatedBy(?User $user): self
+    {
+        $this->updated_by = $user;
+
+        return $this;
+    }
 
 
-    #[ODM\Field(type: "date", nullable: true)]
-    private ?\DateTimeInterface $created_at = null;
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    #[ODM\Field(type: "date")]
+    private ?DateTime $created_at = null;
+
+    public function getCreatedAt(): ?DateTime
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(?DateTimeInterface $created_at): self
+    public function setCreatedAt(?DateTime $created_at): self
     {
-    $this->created_at = $created_at;
-    return $this;
+        $this->created_at = $created_at;
+
+        return $this;
     }
 
 
 
-    #[ODM\Field(type: "date", nullable: true)]
-    private ?\DateTimeInterface $updated_at = null;
+    #[ODM\Field(type: "date")]
+    private ?DateTime $updated_at = null;
 
-    public function getUpdatedAt(): ?DateTimeInterface
+    public function getUpdatedAt(): ?DateTime
     {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(?DateTimeInterface $updated_at): self
+    public function setUpdatedAt(?DateTime $updated_at): self
     {
-    $this->updated_at = $updated_at;
-    return $this;
-    } 
+        $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Lifecycle
+    |--------------------------------------------------------------------------
+    */
+
+    #[ODM\PrePersist]
+    public function prePersist(): void
+    {
+        $this->created_at ??= new DateTime();
+        $this->updated_at ??= new DateTime();
+    }
+
+    #[ODM\PreUpdate]
+    public function preUpdate(): void
+    {
+        $this->updated_at = new DateTime();
+    }
+
+
 
     public function toArray(): array
-{
-    return [
-        'id' => $this->getId(),
-        'name' => $this->getName(),
-        'code' => $this->getCode(),
-        'description' => $this->getDescription(),
-        'is_active' => $this->isActive(),
-        'is_default' => $this->isDefault(),
-        'created_by' => $this->getCreatedBy(),
-        'updated_by' => $this->getUpdatedBy(),
-        'created_at' => $this->getCreatedAt()?->format('Y-m-d H:i:s'),
-        'updated_at' => $this->getUpdatedAt()?->format('Y-m-d H:i:s'),
-    ];
-}
+    {
+        return [
+
+            'id' => $this->getId(),
+
+            'name' => $this->getName(),
+
+            'code' => $this->getCode(),
+
+            'description' => $this->getDescription(),
+
+            'is_active' => $this->isActive(),
+
+            'is_default' => $this->isDefault(),
+
+            'created_by' => $this->getCreatedBy()
+                ? [
+                    'id' => $this->getCreatedBy()->getId(),
+                    'name' => $this->getCreatedBy()->getName()
+                ]
+                : null,
+
+            'updated_by' => $this->getUpdatedBy()
+                ? [
+                    'id' => $this->getUpdatedBy()->getId(),
+                    'name' => $this->getUpdatedBy()->getName()
+                ]
+                : null,
+
+            'created_at' => $this
+                ->getCreatedAt()
+                ?->format('Y-m-d H:i:s'),
+
+            'updated_at' => $this
+                ->getUpdatedAt()
+                ?->format('Y-m-d H:i:s'),
+        ];
+    }
 }

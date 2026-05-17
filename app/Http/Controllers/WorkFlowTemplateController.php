@@ -11,7 +11,7 @@ use App\Helpers\CommonHelper;;
 
 use Illuminate\Support\Facades\Validator;
 
-class WorkTemplateController extends Controller
+class WorkFlowTemplateController extends Controller
 {
     protected $dm;
     /**
@@ -93,8 +93,8 @@ class WorkTemplateController extends Controller
             $workTemplate->setDescription($request->description);
             // $workTemplate->setIsActive(filter_var($request->is_active, FILTER_VALIDATE_BOOLEAN));
             // $workTemplate->setIsDefault(filter_var($request->is_default, FILTER_VALIDATE_BOOLEAN));
-            $workTemplate->setCreatedAt(new \DateTime());
-            $workTemplate->setUpdatedAt(new \DateTime());
+            // $workTemplate->setCreatedAt(new \DateTime());
+            // $workTemplate->setUpdatedAt(new \DateTime());
             // $payload = JWTAuth::parseToken()->getPayload();
 
             // dd($workTemplate); 
@@ -179,7 +179,7 @@ class WorkTemplateController extends Controller
             }
 
             // Audit update
-            $workTemplate->setUpdatedAt(new \DateTime());
+            // $workTemplate->setUpdatedAt(new \DateTime());
 
             // if using auth
             // $workTemplate->setUpdatedBy(auth()->user()->id);

@@ -48,7 +48,7 @@ return new class extends Migration
                             ],
 
                             'created_at' => [
-                                'bsonType' => 'date'
+                                'bsonType' => ['date', 'null']
                             ],
 
                             'updated_by' => [
@@ -57,13 +57,21 @@ return new class extends Migration
                             ],
 
                             'updated_at' => [
-                                'bsonType' => 'date'
-                            ]
+                                'bsonType' => ['date', 'null']
+                            ],
                         ]
                     ]
                 ]
             ]
         );
+
+        DB::connection('mongodb')
+            ->getMongoDB()
+            ->selectCollection('teams')
+            ->createIndex(
+                ['code' => 1],
+                ['unique' => true]
+            );
     }
 
     /**

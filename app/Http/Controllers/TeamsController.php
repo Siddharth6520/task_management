@@ -85,7 +85,7 @@ class TeamsController extends Controller
             $team->setName($request->name);
             $team->setCode($request->code);
             $team->setDescription($request->description);
-            $team->setCreatedAt(new DateTime());
+            // $team->setCreatedAt(new DateTime());
 
             $dm->persist($team);
             $dm->flush();
@@ -202,11 +202,11 @@ class TeamsController extends Controller
                 $team->setName($request->name);
             }
 
-            if ($request->has('description')) {
+            if ($request->exists('description')) {
                 $team->setDescription($request->description);
             }
 
-            $team->setUpdatedAt(new DateTime());
+            // $team->setUpdatedAt(new DateTime());
 
             $dm->flush();
 

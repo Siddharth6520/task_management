@@ -14,8 +14,12 @@ return new class extends Migration {
                 'validator' => [
                     '$jsonSchema' => [
                         'bsonType' => 'object',
-                        'required' => ['name', 'email', 'mobile_no', 'password',
-                        //  'global_role', 
+                        'required' => [
+                            'name',
+                            'email',
+                            'mobile_no',
+                            'password',
+                            //  'global_role', 
                         ],
                         'properties' => [
                             'name' => [
@@ -38,13 +42,9 @@ return new class extends Migration {
                                 'bsonType' => 'string'
                             ],
 
-                            // 'global_role' => [
-                            //     'bsonType' => 'string',
-                            //     'enum' => [
-                            //         'ADMIN',
-                            //         'CLIENT'
-                            //     ]
-                            // ],
+                            'role' => [
+                                'bsonType' => ['objectId', 'null']
+                            ], 
 
                             'is_active' => [
                                 'bsonType' => 'bool'
@@ -78,7 +78,6 @@ return new class extends Migration {
                 ['mobile_no' => 1],
                 ['unique' => true]
             );
-
     }
 
     public function down(): void
