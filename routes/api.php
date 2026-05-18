@@ -22,34 +22,34 @@ use App\Http\Controllers\TaskWorkflowController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::middleware(['jwt'])->group(function () {
+Route::middleware([\App\Http\Middleware\JwtMiddleware::class])->group(function () {
 
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
-Route::middleware(['jwt', 'permission:USERS_VIEW'])->group(function () {
+Route::middleware([\App\Http\Middleware\JwtMiddleware::class, 'permission:USERS_VIEW'])->group(function () {
     Route::prefix('users')->group(function () {
         Route::get('/', [UserController::class, 'index']);
         Route::get('/{id}', [UserController::class, 'show']);
     });
 });
 
-Route::middleware(['jwt', 'permission:USERS_CREATE'])->group(function () {
+Route::middleware([\App\Http\Middleware\JwtMiddleware::class, 'permission:USERS_CREATE'])->group(function () {
     Route::post('users', [UserController::class, 'store']);
 });
 
-Route::middleware(['jwt', 'permission:USERS_EDIT'])->group(function () {
+Route::middleware([\App\Http\Middleware\JwtMiddleware::class, 'permission:USERS_EDIT'])->group(function () {
     Route::put('users/{id}', [UserController::class, 'update']);
 });
 
-Route::middleware(['jwt', 'permission:USERS_DELETE'])->group(function () {
+Route::middleware([\App\Http\Middleware\JwtMiddleware::class, 'permission:USERS_DELETE'])->group(function () {
     Route::delete('users/{id}', [UserController::class, 'destroy']);
 });
 
 // ── Projects ──────────────────────────────────────────────────────────────
-Route::middleware(['jwt'])->prefix('projects')->group(function () {
+Route::middleware([\App\Http\Middleware\JwtMiddleware::class])->prefix('projects')->group(function () {
 
     Route::get('/', [ProjectsController::class, 'index'])
         ->middleware('permission:PROJECTS_VIEW');
@@ -68,7 +68,7 @@ Route::middleware(['jwt'])->prefix('projects')->group(function () {
 });
 
 // ── Teams ─────────────────────────────────────────────────────────────────
-Route::middleware(['jwt'])->prefix('teams')->group(function () {
+Route::middleware([\App\Http\Middleware\JwtMiddleware::class])->prefix('teams')->group(function () {
 
     Route::get('/', [TeamsController::class, 'index'])
         ->middleware('permission:TEAMS_VIEW');
@@ -115,7 +115,7 @@ Route::delete(
 
 
 // ── Team Members ──────────────────────────────────────────────────────────
-Route::middleware(['jwt'])->prefix('team-members')->group(function () {
+Route::middleware([\App\Http\Middleware\JwtMiddleware::class])->prefix('team-members')->group(function () {
 
     Route::get('/', [TeamMemberController::class, 'index'])
         ->middleware('permission:TEAM_MEMBERS_VIEW');
@@ -137,7 +137,7 @@ Route::middleware(['jwt'])->prefix('team-members')->group(function () {
 });
 
 // ── Workflow Templates ────────────────────────────────────────────────────
-Route::middleware(['jwt'])->prefix('workflow-templates')->group(function () {
+Route::middleware([\App\Http\Middleware\JwtMiddleware::class])->prefix('workflow-templates')->group(function () {
 
     Route::get('/', [WorkFlowTemplateController::class, 'index'])
         ->middleware('permission:WORKFLOW_TEMPLATES_VIEW');
@@ -156,7 +156,7 @@ Route::middleware(['jwt'])->prefix('workflow-templates')->group(function () {
 });
 
 // ── Workflow Stages ───────────────────────────────────────────────────────
-Route::middleware(['jwt'])->prefix('workflow-stages')->group(function () {
+Route::middleware([\App\Http\Middleware\JwtMiddleware::class])->prefix('workflow-stages')->group(function () {
 
     Route::get('/', [WorkStagesController::class, 'index'])
         ->middleware('permission:WORKFLOW_STAGES_VIEW');
@@ -175,7 +175,7 @@ Route::middleware(['jwt'])->prefix('workflow-stages')->group(function () {
 });
 
 // ── Tasks ─────────────────────────────────────────────────────────────────
-Route::middleware(['jwt'])->prefix('tasks')->group(function () {
+Route::middleware([\App\Http\Middleware\JwtMiddleware::class])->prefix('tasks')->group(function () {
 
     Route::get('/', [TaskController::class, 'index'])
         ->middleware('permission:TASKS_VIEW');
@@ -198,7 +198,7 @@ Route::middleware(['jwt'])->prefix('tasks')->group(function () {
 });
 
 // ── Task Status History ───────────────────────────────────────────────────
-Route::middleware(['jwt'])->prefix('task-status-history')->group(function () {
+Route::middleware([\App\Http\Middleware\JwtMiddleware::class])->prefix('task-status-history')->group(function () {
 
     Route::get('/', [TaskStatusHistoryController::class, 'index'])
         ->middleware('permission:TASK_STATUS_HISTORY_VIEW');
@@ -208,7 +208,7 @@ Route::middleware(['jwt'])->prefix('task-status-history')->group(function () {
 });
 
 // ── Task Extensions ───────────────────────────────────────────────────────
-Route::middleware(['jwt'])->prefix('task-extensions')->group(function () {
+Route::middleware([\App\Http\Middleware\JwtMiddleware::class])->prefix('task-extensions')->group(function () {
 
     Route::get('/', [TaskExtensionController::class, 'index'])
         ->middleware('permission:TASK_EXTENSIONS_VIEW');
@@ -224,7 +224,7 @@ Route::middleware(['jwt'])->prefix('task-extensions')->group(function () {
 });
 
 // ── Attachments ───────────────────────────────────────────────────────────
-Route::middleware(['jwt'])->prefix('attachments')->group(function () {
+Route::middleware([\App\Http\Middleware\JwtMiddleware::class])->prefix('attachments')->group(function () {
 
     Route::get('/task/{taskId}', [AttachmentController::class, 'index'])
         ->middleware('permission:ATTACHMENTS_VIEW');
@@ -238,7 +238,7 @@ Route::middleware(['jwt'])->prefix('attachments')->group(function () {
     Route::delete('/{id}', [AttachmentController::class, 'destroy'])
         ->middleware('permission:ATTACHMENTS_DELETE');
 
-    Route::middleware(['jwt'])->prefix('tasks')->group(function () {
+    Route::middleware([\App\Http\Middleware\JwtMiddleware::class])->prefix('tasks')->group(function () {
         Route::post('/{id}/transition', [TaskWorkflowController::class, 'transition'])
             ->middleware('permission:TASKS_EDIT');
 

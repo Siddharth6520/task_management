@@ -55,7 +55,7 @@ class UserController extends Controller
             'password' => 'required|min:6',
             'mobile_no' => 'required|regex:/^[0-9]{10}$/',
             'username' => 'required|string',
-            'role_id' => 'nullable|string'
+            'role' => 'nullable|string'
         ]);
 
         if ($validator->fails()) {
@@ -88,10 +88,14 @@ class UserController extends Controller
 
             $role = null;
 
-            if ($request->filled('role_id')) {
+            if ($request->filled('role')) {
 
                 $role = $dm->getRepository(Role::class)
-                    ->find($request->role_id);
+                    ->findOneBy([
+                        'name' => $request->role
+                    ]);
+
+                // logger($role);
 
                 if (!$role) {
                     return CommonHelper::response(
@@ -122,7 +126,8 @@ class UserController extends Controller
                 "User created successfully"
             );
         } catch (\Exception $e) {
-            CommonHelper::response(
+
+            return CommonHelper::response(
                 false,
                 500,
                 null,
