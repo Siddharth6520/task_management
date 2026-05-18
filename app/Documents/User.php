@@ -11,6 +11,7 @@ use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
 #[ODM\Document(collection: "users")]
+#[ODM\HasLifecycleCallbacks]
 class User implements AuthenticatableContract, JWTSubject
 {
     use Authenticatable;
@@ -42,7 +43,8 @@ class User implements AuthenticatableContract, JWTSubject
 
         return $this;
     }
-    public function getName(): string{
+    public function getName(): string
+    {
         return $this->name;
     }
 
@@ -73,7 +75,8 @@ class User implements AuthenticatableContract, JWTSubject
 
         return $this;
     }
-    public function getMobileNo(): string{
+    public function getMobileNo(): string
+    {
         return $this->mobile_no;
     }
 
@@ -110,7 +113,8 @@ class User implements AuthenticatableContract, JWTSubject
 
     #[ODM\Field(type: "bool")]
     private bool $is_active = true;
-    public function isActive():bool{
+    public function isActive(): bool
+    {
         return $this->is_active;
     }
 
@@ -122,11 +126,30 @@ class User implements AuthenticatableContract, JWTSubject
     }
 
 
+    #[ODM\ReferenceOne(
+        targetDocument: Role::class,
+        storeAs: 'id'
+    )]
+    private ?Role $role = null;
+
+    public function getRole(): ?Role
+    {
+        return $this->role;
+    }
+
+    public function setRole(?Role $role): self
+    {
+        $this->role = $role;
+        return $this;
+    }
+
 
     #[ODM\Field(type: "date")]
     private \DateTime $created_at;
-    public function __construct()
+
+    #[ODM\PrePersist]
+    public function prePersist(): void
     {
-        $this->created_at = new \DateTime();
+        $this->created_at ??= new \DateTime();
     }
 }

@@ -4,10 +4,11 @@ namespace App\Documents;
 
 use DateTime;
 use App\Documents\User;
-use App\Documents\Tasks;
-use App\Documents\WorkStage;
+use App\Documents\Task;
+use App\Documents\WorkFlowStages;
 use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 
+#[ODM\HasLifecycleCallbacks]
 #[ODM\Document(collection: "attachments")]
 #[ODM\Index(keys: [
     'task' => 'asc',
@@ -32,17 +33,17 @@ class Attachment
     */
 
     #[ODM\ReferenceOne(
-        targetDocument: Tasks::class,
+        targetDocument: Task::class,
         storeAs: 'id'
     )]
-    private ?Tasks $task = null;
+    private ?Task $task = null;
 
-    public function getTask(): ?Tasks
+    public function getTask(): ?Task
     {
         return $this->task;
     }
 
-    public function setTask(?Tasks $task): self
+    public function setTask(?Task $task): self
     {
         $this->task = $task;
 
@@ -52,17 +53,17 @@ class Attachment
 
 
     #[ODM\ReferenceOne(
-        targetDocument: WorkStage::class,
+        targetDocument: WorkFlowStages::class,
         storeAs: 'id'
     )]
-    private ?WorkStage $workflow_stage = null;
+    private ?WorkFlowStages $workflow_stage = null;
 
-    public function getWorkflowStage(): ?WorkStage
+    public function getWorkflowStage(): ?WorkFlowStages
     {
         return $this->workflow_stage;
     }
 
-    public function setWorkflowStage(?WorkStage $workflow_stage): self
+    public function setWorkflowStage(?WorkFlowStages $workflow_stage): self
     {
         $this->workflow_stage = $workflow_stage;
 
@@ -209,5 +210,11 @@ class Attachment
         $this->uploaded_at = $uploaded_at;
 
         return $this;
+    }
+
+    #[ODM\PrePersist]
+    public function prePersist(): void
+    {
+        $this->uploaded_at ??= new DateTime();
     }
 }

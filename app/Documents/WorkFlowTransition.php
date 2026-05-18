@@ -4,9 +4,9 @@ namespace App\Documents;
 
 use DateTime;
 use App\Documents\User;
-use App\Documents\Tasks;
+use App\Documents\Task;
 use App\Documents\Department;
-use App\Documents\WorkStage;
+use App\Documents\WorkFlowStages;
 use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 
 #[ODM\Document(collection: "workflow_transitions")]
@@ -35,17 +35,17 @@ class WorkFlowTransition
     */
 
     #[ODM\ReferenceOne(
-        targetDocument: Tasks::class,
+        targetDocument: Task::class,
         storeAs: 'id'
     )]
-    private ?Tasks $task = null;
+    private ?Task $task = null;
 
-    public function getTask(): ?Tasks
+    public function getTask(): ?Task
     {
         return $this->task;
     }
 
-    public function setTask(?Tasks $task): self
+    public function setTask(?Task $task): self
     {
         $this->task = $task;
 
@@ -153,17 +153,17 @@ class WorkFlowTransition
     */
 
     #[ODM\ReferenceOne(
-        targetDocument: WorkStage::class,
+        targetDocument: WorkFlowStages::class,
         storeAs: 'id'
     )]
-    private ?WorkStage $from_workflow_stage = null;
+    private ?WorkFlowStages $from_workflow_stage = null;
 
-    public function getFromWorkflowStage(): ?WorkStage
+    public function getFromWorkflowStage(): ?WorkFlowStages
     {
         return $this->from_workflow_stage;
     }
 
-    public function setFromWorkflowStage(?WorkStage $stage): self
+    public function setFromWorkflowStage(?WorkFlowStages $stage): self
     {
         $this->from_workflow_stage = $stage;
 
@@ -173,17 +173,17 @@ class WorkFlowTransition
 
 
     #[ODM\ReferenceOne(
-        targetDocument: WorkStage::class,
+        targetDocument: WorkFlowStages::class,
         storeAs: 'id'
     )]
-    private ?WorkStage $to_workflow_stage = null;
+    private ?WorkFlowStages $to_workflow_stage = null;
 
-    public function getToWorkflowStage(): ?WorkStage
+    public function getToWorkflowStage(): ?WorkFlowStages
     {
         return $this->to_workflow_stage;
     }
 
-    public function setToWorkflowStage(?WorkStage $stage): self
+    public function setToWorkflowStage(?WorkFlowStages $stage): self
     {
         $this->to_workflow_stage = $stage;
 

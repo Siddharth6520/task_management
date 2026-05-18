@@ -1,17 +1,12 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        //permissions -  module+actions - 
         DB::connection('mongodb')->getMongoDB()->createCollection(
             'permissions',
             [
@@ -21,18 +16,18 @@ return new class extends Migration
                         'bsonType' => 'object',
 
                         'required' => [
-                            'module_id',
-                            'action_id',
+                            'module',
+                            'action',
                             'code'
                         ],
 
                         'properties' => [
 
-                            'module_id' => [
+                            'module' => [
                                 'bsonType' => 'objectId'
                             ],
 
-                            'action_id' => [
+                            'action' => [
                                 'bsonType' => 'objectId'
                             ],
 
@@ -45,50 +40,52 @@ return new class extends Migration
                             ],
 
                             'description' => [
-                                'bsonType' => 'string'
+                                'bsonType' => ['string', 'null']
                             ],
 
                             'is_active' => [
                                 'bsonType' => 'bool'
                             ],
+
                             'created_by' => [
-                                'bsonType' => 'objectId',
-                                'description' => 'Created user id'
+                                'bsonType' => ['objectId', 'null']
                             ],
 
                             'created_at' => [
-                                'bsonType' => 'date'
+                                'bsonType' => ['date', 'null']
                             ],
+
                             'updated_by' => [
-                                'bsonType' => 'objectId',
-                                'description' => 'Updated user id'
+                                'bsonType' => ['objectId', 'null']
                             ],
 
                             'updated_at' => [
-                                'bsonType' => 'date'
+                                'bsonType' => ['date', 'null']
                             ]
                         ]
                     ]
                 ]
             ]
         );
+
         DB::connection('mongodb')
             ->getMongoDB()
             ->selectCollection('permissions')
             ->createIndex(
                 [
-                    'module_id' => 1,
-                    'action_id' => 1
+                    'module' => 1,
+                    'action' => 1
                 ],
-                ['unique' => true]
+                [
+                    'unique' => true
+                ]
             );
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        DB::connection('mongodb')->getMongoDB()->dropCollection('permissions');
+        DB::connection('mongodb')
+            ->getMongoDB()
+            ->dropCollection('permissions');
     }
 };

@@ -6,7 +6,7 @@ use DateTime;
 use App\Documents\Role;
 use App\Documents\User;
 use App\Documents\Department;
-use App\Documents\WorkTemplate;
+use App\Documents\WorkFlowTemplate;
 use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 
 #[ODM\Document(collection: "workflow_stages")]
@@ -20,7 +20,7 @@ use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
     'workflow_template' => 'asc',
     'stage_order' => 'asc'
 ])]
-class WorkStage
+class WorkFlowStages
 {
     #[ODM\Id]
     private string $id;

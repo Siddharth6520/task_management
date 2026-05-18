@@ -43,27 +43,35 @@ return new class extends Migration
                             ],
 
                             'created_by' => [
-                                'bsonType' => 'objectId',
+                                'bsonType' => ['objectId', 'null'],
                                 'description' => 'Created user id'
                             ],
 
                             'created_at' => [
-                                'bsonType' => 'date'
+                                'bsonType' => ['date', 'null']
                             ],
 
                             'updated_by' => [
-                                'bsonType' => 'objectId',
+                                'bsonType' => ['objectId', 'null'],
                                 'description' => 'Updated user id'
                             ],
 
                             'updated_at' => [
-                                'bsonType' => 'date'
-                            ]
+                                'bsonType' => ['date', 'null']
+                            ],
                         ]
                     ]
                 ]
             ]
         );
+
+        DB::connection('mongodb')
+            ->getMongoDB()
+            ->selectCollection('teams')
+            ->createIndex(
+                ['code' => 1],
+                ['unique' => true]
+            );
     }
 
     /**

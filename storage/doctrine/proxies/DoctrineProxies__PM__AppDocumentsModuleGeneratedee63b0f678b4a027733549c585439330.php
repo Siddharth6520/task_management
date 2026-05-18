@@ -1,0 +1,518 @@
+<?php
+
+namespace DoctrineProxies\__PM__\App\Documents\Module;
+
+class Generatedee63b0f678b4a027733549c585439330 extends \App\Documents\Module implements \ProxyManager\Proxy\GhostObjectInterface
+{
+    /**
+     * @var \Closure|null initializer responsible for generating the wrapped object
+     */
+    private $initializeree539 = null;
+
+    /**
+     * @var bool tracks initialization status - true while the object is initializing
+     */
+    private $initializationTrackere6281 = false;
+
+    /**
+     * @var bool[] map of public properties of the parent class
+     */
+    private static $publicPropertiese8d9d = [
+        
+    ];
+
+    /**
+     * @var array[][] visibility and default value of defined properties, indexed by
+     * property name and class name
+     */
+    private static $privatePropertiese8cd4 = [
+        'name' => [
+            'App\\Documents\\Module' => true,
+        ],
+        'code' => [
+            'App\\Documents\\Module' => true,
+        ],
+        'description' => [
+            'App\\Documents\\Module' => true,
+        ],
+        'is_active' => [
+            'App\\Documents\\Module' => true,
+        ],
+        'created_by' => [
+            'App\\Documents\\Module' => true,
+        ],
+        'updated_by' => [
+            'App\\Documents\\Module' => true,
+        ],
+        'created_at' => [
+            'App\\Documents\\Module' => true,
+        ],
+        'updated_at' => [
+            'App\\Documents\\Module' => true,
+        ],
+    ];
+
+    /**
+     * @var string[][] declaring class name of defined protected properties, indexed by
+     * property name
+     */
+    private static $protectedPropertiese79dd = [
+        
+    ];
+
+    private static $signatureee63b0f678b4a027733549c585439330 = 'YTo0OntzOjk6ImNsYXNzTmFtZSI7czoyMDoiQXBwXERvY3VtZW50c1xNb2R1bGUiO3M6NzoiZmFjdG9yeSI7czo0NDoiUHJveHlNYW5hZ2VyXEZhY3RvcnlcTGF6eUxvYWRpbmdHaG9zdEZhY3RvcnkiO3M6MTk6InByb3h5TWFuYWdlclZlcnNpb24iO3M6NDg6InYxLjAuMTlAYzIwMjk5YWE5ZjQ4YTYyMjA1Mjk2NGE3NWM1YTRjZWYwMTczOThiMiI7czoxMjoicHJveHlPcHRpb25zIjthOjE6e3M6MTc6InNraXBwZWRQcm9wZXJ0aWVzIjthOjE6e2k6MDtzOjI0OiIAQXBwXERvY3VtZW50c1xNb2R1bGUAaWQiO319fQ==';
+
+    /**
+     * Triggers initialization logic for this ghost object
+     *
+     * @param string  $methodName
+     * @param mixed[] $parameters
+     *
+     * @return mixed
+     */
+    private function callInitializerb99b1($methodName, array $parameters)
+    {
+        if ($this->initializationTrackere6281 || ! $this->initializeree539) {
+            return;
+        }
+
+        $this->initializationTrackere6281 = true;
+
+        static $cacheApp_Documents_Module;
+
+        $cacheApp_Documents_Module ?? $cacheApp_Documents_Module = \Closure::bind(static function ($instance) {
+            $instance->description = '';
+            $instance->is_active = true;
+            $instance->created_by = null;
+            $instance->updated_by = null;
+        }, null, 'App\\Documents\\Module');
+
+        $cacheApp_Documents_Module($this);
+
+
+
+
+        $nonReferenceableProperties = new class() {
+            public ?string $name_on_App_Documents_Module;
+            public ?string $code_on_App_Documents_Module;
+            public ?\DateTime $created_at_on_App_Documents_Module;
+            public ?\DateTime $updated_at_on_App_Documents_Module;
+        };
+        $properties = [
+            '' . "\0" . 'App\\Documents\\Module' . "\0" . 'name' => & $nonReferenceableProperties->name_on_App_Documents_Module,
+            '' . "\0" . 'App\\Documents\\Module' . "\0" . 'code' => & $nonReferenceableProperties->code_on_App_Documents_Module,
+            '' . "\0" . 'App\\Documents\\Module' . "\0" . 'created_at' => & $nonReferenceableProperties->created_at_on_App_Documents_Module,
+            '' . "\0" . 'App\\Documents\\Module' . "\0" . 'updated_at' => & $nonReferenceableProperties->updated_at_on_App_Documents_Module,
+        ];
+
+        static $cacheFetchApp_Documents_Module;
+
+        $cacheFetchApp_Documents_Module ?? $cacheFetchApp_Documents_Module = \Closure::bind(function ($instance, array & $properties) {
+            $properties['' . "\0" . 'App\\Documents\\Module' . "\0" . 'description'] = & $instance->description;
+            $properties['' . "\0" . 'App\\Documents\\Module' . "\0" . 'is_active'] = & $instance->is_active;
+            $properties['' . "\0" . 'App\\Documents\\Module' . "\0" . 'created_by'] = & $instance->created_by;
+            $properties['' . "\0" . 'App\\Documents\\Module' . "\0" . 'updated_by'] = & $instance->updated_by;
+        }, null, 'App\\Documents\\Module');
+
+        $cacheFetchApp_Documents_Module($this, $properties);
+
+        $result = $this->initializeree539->__invoke($this, $methodName, $parameters, $this->initializeree539, $properties);
+        static $cacheAssignApp_Documents_Module;
+
+        $cacheAssignApp_Documents_Module ?? $cacheAssignApp_Documents_Module = \Closure::bind(function ($instance, $nonReferenceableProperties) {
+            isset($nonReferenceableProperties->name_on_App_Documents_Module) && $instance->name = $nonReferenceableProperties->name_on_App_Documents_Module;
+            isset($nonReferenceableProperties->code_on_App_Documents_Module) && $instance->code = $nonReferenceableProperties->code_on_App_Documents_Module;
+            isset($nonReferenceableProperties->created_at_on_App_Documents_Module) && $instance->created_at = $nonReferenceableProperties->created_at_on_App_Documents_Module;
+            isset($nonReferenceableProperties->updated_at_on_App_Documents_Module) && $instance->updated_at = $nonReferenceableProperties->updated_at_on_App_Documents_Module;
+        }, null, 'App\\Documents\\Module');
+
+        $cacheAssignApp_Documents_Module($this, $nonReferenceableProperties);
+        $this->initializationTrackere6281 = false;
+
+        return $result;
+    }
+
+    /**
+     * Constructor for lazy initialization
+     *
+     * @param \Closure|null $initializer
+     */
+    public static function staticProxyConstructor($initializer)
+    {
+        static $reflection;
+
+        $reflection = $reflection ?? new \ReflectionClass(__CLASS__);
+        $instance   = $reflection->newInstanceWithoutConstructor();
+
+        \Closure::bind(function (\App\Documents\Module $instance) {
+            unset($instance->name, $instance->code, $instance->description, $instance->is_active, $instance->created_by, $instance->updated_by, $instance->created_at, $instance->updated_at);
+        }, $instance, 'App\\Documents\\Module')->__invoke($instance);
+
+        $instance->initializeree539 = $initializer;
+
+        return $instance;
+    }
+
+    public function & __get($name)
+    {
+        $this->initializeree539 && ! $this->initializationTrackere6281 && $this->callInitializerb99b1('__get', array('name' => $name));
+
+        if (isset(self::$publicPropertiese8d9d[$name])) {
+            return $this->$name;
+        }
+
+        if (isset(self::$protectedPropertiese79dd[$name])) {
+            if ($this->initializationTrackere6281) {
+                return $this->$name;
+            }
+
+            // check protected property access via compatible class
+            $callers      = debug_backtrace(\DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
+            $caller       = isset($callers[1]) ? $callers[1] : [];
+            $object       = isset($caller['object']) ? $caller['object'] : '';
+            $expectedType = self::$protectedPropertiese79dd[$name];
+
+            if ($object instanceof $expectedType) {
+                return $this->$name;
+            }
+
+            $class = isset($caller['class']) ? $caller['class'] : '';
+
+            if ($class === $expectedType || is_subclass_of($class, $expectedType) || $class === 'ReflectionProperty') {
+                return $this->$name;
+            }
+        } elseif (isset(self::$privatePropertiese8cd4[$name])) {
+            // check private property access via same class
+            $callers = debug_backtrace(\DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
+            $caller  = isset($callers[1]) ? $callers[1] : [];
+            $class   = isset($caller['class']) ? $caller['class'] : '';
+
+            static $accessorCache = [];
+
+            if (isset(self::$privatePropertiese8cd4[$name][$class])) {
+                $cacheKey = $class . '#' . $name;
+                $accessor = isset($accessorCache[$cacheKey])
+                    ? $accessorCache[$cacheKey]
+                    : $accessorCache[$cacheKey] = \Closure::bind(static function & ($instance) use ($name) {
+                        return $instance->$name;
+                    }, null, $class);
+
+                return $accessor($this);
+            }
+
+            if ($this->initializationTrackere6281 || 'ReflectionProperty' === $class) {
+                $tmpClass = key(self::$privatePropertiese8cd4[$name]);
+                $cacheKey = $tmpClass . '#' . $name;
+                $accessor = isset($accessorCache[$cacheKey])
+                    ? $accessorCache[$cacheKey]
+                    : $accessorCache[$cacheKey] = \Closure::bind(static function & ($instance) use ($name) {
+                        return $instance->$name;
+                    }, null, $tmpClass);
+
+                return $accessor($this);
+            }
+        }
+
+        $realInstanceReflection = new \ReflectionClass(get_parent_class($this));
+
+        if (! $realInstanceReflection->hasProperty($name)) {
+            $targetObject = $this;
+
+            $backtrace = debug_backtrace(false, 1);
+            trigger_error(
+                sprintf(
+                    'Undefined property: %s::$%s in %s on line %s',
+                    $realInstanceReflection->getName(),
+                    $name,
+                    $backtrace[0]['file'],
+                    $backtrace[0]['line']
+                ),
+                \E_USER_NOTICE
+            );
+            return $targetObject->$name;
+        }
+
+        $targetObject = $realInstanceReflection->newInstanceWithoutConstructor();
+        $accessor = function & () use ($targetObject, $name) {
+            return $targetObject->$name;
+        };
+        $backtrace = debug_backtrace(true, 2);
+        $scopeObject = isset($backtrace[1]['object']) ? $backtrace[1]['object'] : new \ProxyManager\Stub\EmptyClassStub();
+        $accessor = $accessor->bindTo($scopeObject, get_class($scopeObject));
+        $returnValue = & $accessor();
+
+        return $returnValue;
+    }
+
+    public function __set($name, $value)
+    {
+        $this->initializeree539 && $this->callInitializerb99b1('__set', array('name' => $name, 'value' => $value));
+
+        if (isset(self::$publicPropertiese8d9d[$name])) {
+            return ($this->$name = $value);
+        }
+
+        if (isset(self::$protectedPropertiese79dd[$name])) {
+            // check protected property access via compatible class
+            $callers      = debug_backtrace(\DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
+            $caller       = isset($callers[1]) ? $callers[1] : [];
+            $object       = isset($caller['object']) ? $caller['object'] : '';
+            $expectedType = self::$protectedPropertiese79dd[$name];
+
+            if ($object instanceof $expectedType) {
+                return ($this->$name = $value);
+            }
+
+            $class = isset($caller['class']) ? $caller['class'] : '';
+
+            if ($class === $expectedType || is_subclass_of($class, $expectedType) || $class === 'ReflectionProperty') {
+                return ($this->$name = $value);
+            }
+        } elseif (isset(self::$privatePropertiese8cd4[$name])) {
+            // check private property access via same class
+            $callers = debug_backtrace(\DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
+            $caller  = isset($callers[1]) ? $callers[1] : [];
+            $class   = isset($caller['class']) ? $caller['class'] : '';
+
+            static $accessorCache = [];
+
+            if (isset(self::$privatePropertiese8cd4[$name][$class])) {
+                $cacheKey = $class . '#' . $name;
+                $accessor = isset($accessorCache[$cacheKey])
+                    ? $accessorCache[$cacheKey]
+                    : $accessorCache[$cacheKey] = \Closure::bind(static function ($instance, $value) use ($name) {
+                        return ($instance->$name = $value);
+                    }, null, $class);
+
+                return $accessor($this, $value);
+            }
+
+            if ('ReflectionProperty' === $class) {
+                $tmpClass = key(self::$privatePropertiese8cd4[$name]);
+                $cacheKey = $tmpClass . '#' . $name;
+                $accessor = isset($accessorCache[$cacheKey])
+                    ? $accessorCache[$cacheKey]
+                    : $accessorCache[$cacheKey] = \Closure::bind(static function ($instance, $value) use ($name) {
+                        return ($instance->$name = $value);
+                    }, null, $tmpClass);
+
+                return $accessor($this, $value);
+            }
+        }
+
+        $realInstanceReflection = new \ReflectionClass(get_parent_class($this));
+
+        if (! $realInstanceReflection->hasProperty($name)) {
+            $targetObject = $this;
+
+            $targetObject->$name = $value;
+
+            return $targetObject->$name;
+        }
+
+        $targetObject = $realInstanceReflection->newInstanceWithoutConstructor();
+        $accessor = function & () use ($targetObject, $name, $value) {
+            $targetObject->$name = $value;
+
+            return $targetObject->$name;
+        };
+        $backtrace = debug_backtrace(true, 2);
+        $scopeObject = isset($backtrace[1]['object']) ? $backtrace[1]['object'] : new \ProxyManager\Stub\EmptyClassStub();
+        $accessor = $accessor->bindTo($scopeObject, get_class($scopeObject));
+        $returnValue = & $accessor();
+
+        return $returnValue;
+    }
+
+    public function __isset($name)
+    {
+        $this->initializeree539 && $this->callInitializerb99b1('__isset', array('name' => $name));
+
+        if (isset(self::$publicPropertiese8d9d[$name])) {
+            return isset($this->$name);
+        }
+
+        if (isset(self::$protectedPropertiese79dd[$name])) {
+            // check protected property access via compatible class
+            $callers      = debug_backtrace(\DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
+            $caller       = isset($callers[1]) ? $callers[1] : [];
+            $object       = isset($caller['object']) ? $caller['object'] : '';
+            $expectedType = self::$protectedPropertiese79dd[$name];
+
+            if ($object instanceof $expectedType) {
+                return isset($this->$name);
+            }
+
+            $class = isset($caller['class']) ? $caller['class'] : '';
+
+            if ($class === $expectedType || is_subclass_of($class, $expectedType)) {
+                return isset($this->$name);
+            }
+        } else {
+            // check private property access via same class
+            $callers = debug_backtrace(\DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
+            $caller  = isset($callers[1]) ? $callers[1] : [];
+            $class   = isset($caller['class']) ? $caller['class'] : '';
+
+            static $accessorCache = [];
+
+            if (isset(self::$privatePropertiese8cd4[$name][$class])) {
+                $cacheKey = $class . '#' . $name;
+                $accessor = isset($accessorCache[$cacheKey])
+                    ? $accessorCache[$cacheKey]
+                    : $accessorCache[$cacheKey] = \Closure::bind(static function ($instance) use ($name) {
+                        return isset($instance->$name);
+                    }, null, $class);
+
+                return $accessor($this);
+            }
+
+            if ('ReflectionProperty' === $class) {
+                $tmpClass = key(self::$privatePropertiese8cd4[$name]);
+                $cacheKey = $tmpClass . '#' . $name;
+                $accessor = isset($accessorCache[$cacheKey])
+                    ? $accessorCache[$cacheKey]
+                    : $accessorCache[$cacheKey] = \Closure::bind(static function ($instance) use ($name) {
+                        return isset($instance->$name);
+                    }, null, $tmpClass);
+
+                return $accessor($this);
+            }
+        }
+
+        $realInstanceReflection = new \ReflectionClass(get_parent_class($this));
+
+        if (! $realInstanceReflection->hasProperty($name)) {
+            $targetObject = $this;
+
+            return isset($targetObject->$name);
+        }
+
+        $targetObject = $realInstanceReflection->newInstanceWithoutConstructor();
+        $accessor = function () use ($targetObject, $name) {
+            return isset($targetObject->$name);
+        };
+        $backtrace = debug_backtrace(true, 2);
+        $scopeObject = isset($backtrace[1]['object']) ? $backtrace[1]['object'] : new \ProxyManager\Stub\EmptyClassStub();
+        $accessor = $accessor->bindTo($scopeObject, get_class($scopeObject));
+        $returnValue = $accessor();
+
+        return $returnValue;
+    }
+
+    public function __unset($name)
+    {
+        $this->initializeree539 && $this->callInitializerb99b1('__unset', array('name' => $name));
+
+        if (isset(self::$publicPropertiese8d9d[$name])) {
+            unset($this->$name);
+
+            return;
+        }
+
+        if (isset(self::$protectedPropertiese79dd[$name])) {
+            // check protected property access via compatible class
+            $callers      = debug_backtrace(\DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
+            $caller       = isset($callers[1]) ? $callers[1] : [];
+            $object       = isset($caller['object']) ? $caller['object'] : '';
+            $expectedType = self::$protectedPropertiese79dd[$name];
+
+            if ($object instanceof $expectedType) {
+                unset($this->$name);
+
+                return;
+            }
+
+            $class = isset($caller['class']) ? $caller['class'] : '';
+
+            if ($class === $expectedType || is_subclass_of($class, $expectedType) || $class === 'ReflectionProperty') {
+                unset($this->$name);
+
+                return;
+            }
+        } elseif (isset(self::$privatePropertiese8cd4[$name])) {
+            // check private property access via same class
+            $callers = debug_backtrace(\DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
+            $caller  = isset($callers[1]) ? $callers[1] : [];
+            $class   = isset($caller['class']) ? $caller['class'] : '';
+
+            static $accessorCache = [];
+
+            if (isset(self::$privatePropertiese8cd4[$name][$class])) {
+                $cacheKey = $class . '#' . $name;
+                $accessor = isset($accessorCache[$cacheKey])
+                    ? $accessorCache[$cacheKey]
+                    : $accessorCache[$cacheKey] = \Closure::bind(static function ($instance) use ($name) {
+                        unset($instance->$name);
+                    }, null, $class);
+
+                return $accessor($this);
+            }
+
+            if ('ReflectionProperty' === $class) {
+                $tmpClass = key(self::$privatePropertiese8cd4[$name]);
+                $cacheKey = $tmpClass . '#' . $name;
+                $accessor = isset($accessorCache[$cacheKey])
+                    ? $accessorCache[$cacheKey]
+                    : $accessorCache[$cacheKey] = \Closure::bind(static function ($instance) use ($name) {
+                        unset($instance->$name);
+                    }, null, $tmpClass);
+
+                return $accessor($this);
+            }
+        }
+
+        $realInstanceReflection = new \ReflectionClass(get_parent_class($this));
+
+        if (! $realInstanceReflection->hasProperty($name)) {
+            $targetObject = $this;
+
+            unset($targetObject->$name);
+
+            return;
+        }
+
+        $targetObject = $realInstanceReflection->newInstanceWithoutConstructor();
+        $accessor = function () use ($targetObject, $name) {
+            unset($targetObject->$name);
+
+            return;
+        };
+        $backtrace = debug_backtrace(true, 2);
+        $scopeObject = isset($backtrace[1]['object']) ? $backtrace[1]['object'] : new \ProxyManager\Stub\EmptyClassStub();
+        $accessor = $accessor->bindTo($scopeObject, get_class($scopeObject));
+        $accessor();
+    }
+
+    public function __clone()
+    {
+        $this->initializeree539 && $this->callInitializerb99b1('__clone', []);
+    }
+
+    public function __sleep()
+    {
+        $this->initializeree539 && $this->callInitializerb99b1('__sleep', []);
+
+        return array_keys((array) $this);
+    }
+
+    public function setProxyInitializer(?\Closure $initializer = null): void
+    {
+        $this->initializeree539 = $initializer;
+    }
+
+    public function getProxyInitializer(): ?\Closure
+    {
+        return $this->initializeree539;
+    }
+
+    public function initializeProxy(): bool
+    {
+        return $this->initializeree539 && $this->callInitializerb99b1('initializeProxy', []);
+    }
+
+    public function isProxyInitialized(): bool
+    {
+        return ! $this->initializeree539;
+    }
+}

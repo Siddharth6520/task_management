@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Documents\Department;
-use App\Documents\Role;
 use App\Documents\Team;
 use App\Helpers\CommonHelper;
 use App\Documents\TeamMember;
@@ -54,13 +53,6 @@ class TeamMemberController extends Controller
                     ]
                     : null,
 
-                'role' => $team_member->getRole()
-                    ? [
-                        'id' => $team_member->getRole()->getId(),
-                        'name' => $team_member->getRole()->getName(),
-                    ]
-                    : null,
-
                 'reporting_manager' => $team_member->getReportingManager()
                     ? [
                         'id' => $team_member->getReportingManager()->getId(),
@@ -103,11 +95,10 @@ class TeamMemberController extends Controller
     public function store(Request $request, DocumentManager $dm)
     {
         $validator = Validator::make($request->all(), [
-            'team_id' => 'required|numeric',
-            'user_id' => 'required|numeric',
-            'department_id' => 'required|numeric',
-            'role_id' => 'required|numeric',
-            'reporting_manager_id' => 'required|numeric'
+            'team_id' => 'required|string',
+            'user_id' => 'required|string',
+            'department_id' => 'required|string',
+            'reporting_manager_id' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -155,17 +146,7 @@ class TeamMemberController extends Controller
             );
         }
 
-        $role = $dm->getRepository(Role::class)
-            ->find($request->role_id);
 
-        if (!$role) {
-            return CommonHelper::response(
-                false,
-                404,
-                null,
-                "Role not found"
-            );
-        }
 
         $reporting_manager = null;
 
@@ -210,8 +191,6 @@ class TeamMemberController extends Controller
 
             $team_member->setDepartment($department);
 
-            $team_member->setRole($role);
-
             $team_member->setReportingManager($reporting_manager);
 
             $team_member->setIsActive(
@@ -242,8 +221,9 @@ class TeamMemberController extends Controller
         }
     }
 
-     //bulk_create
-    public function bulk_store(BulkTeamMemberRequest $request, DocumentManager $dm) {
+    //bulk_create
+    public function bulk_store(BulkTeamMemberRequest $request, DocumentManager $dm)
+    {
 
         try {
 
@@ -310,13 +290,7 @@ class TeamMemberController extends Controller
                 ]
                 : null,
 
-            'role' => $team_member->getRole()
-                ? [
-                    'id' => $team_member->getRole()->getId(),
-                    'name' => $team_member->getRole()->getName(),
-                ]
-                : null,
-
+            
             'reporting_manager' => $team_member->getReportingManager()
                 ? [
                     'id' => $team_member->getReportingManager()->getId(),
@@ -362,7 +336,6 @@ class TeamMemberController extends Controller
             'team_id' => 'sometimes|string',
             'user_id' => 'sometimes|string',
             'department_id' => 'sometimes|string',
-            'role_id' => 'sometimes|string',
             'reporting_manager_id' => 'nullable|string',
             'is_active' => 'sometimes|boolean'
         ]);
@@ -447,22 +420,6 @@ class TeamMemberController extends Controller
                 $team_member->setDepartment($department);
             }
 
-            if ($request->has('role_id')) {
-
-                $role = $dm->getRepository(Role::class)
-                    ->find($request->role_id);
-
-                if (!$role) {
-                    return CommonHelper::response(
-                        false,
-                        404,
-                        null,
-                        "Role not found"
-                    );
-                }
-
-                $team_member->setRole($role);
-            }
 
             if ($request->has('reporting_manager_id')) {
 
@@ -583,6 +540,4 @@ class TeamMemberController extends Controller
             );
         }
     }
-
-   
 }

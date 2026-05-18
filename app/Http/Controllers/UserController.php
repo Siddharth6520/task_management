@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Documents\Role;
 use App\Documents\User;
 use App\Helpers\CommonHelper;
 
@@ -28,6 +29,10 @@ class UserController extends Controller
                 'email' => $user->getEmail(),
                 'mobile_no' => $user->getMobileNo(),
                 'username' => $user->getUsername(),
+                'role' => $user->getRole() ? [
+                    'id' => $user->getRole()->getId(),
+                    'name' => $user->getRole()->getName()
+                ] : null,
                 'is_active' => $user->isActive(),
             ];
         }
@@ -49,7 +54,8 @@ class UserController extends Controller
             'email' => 'required|email',
             'password' => 'required|min:6',
             'mobile_no' => 'required|regex:/^[0-9]{10}$/',
-            'username' => 'required|string'
+            'username' => 'required|string',
+            'role_id' => 'nullable|string'
         ]);
 
         if ($validator->fails()) {
@@ -79,7 +85,23 @@ class UserController extends Controller
                     "User with email or username already exists"
                 );
             }
-            
+
+            $role = null;
+
+            if ($request->filled('role_id')) {
+
+                $role = $dm->getRepository(Role::class)
+                    ->find($request->role_id);
+
+                if (!$role) {
+                    return CommonHelper::response(
+                        false,
+                        404,
+                        null,
+                        "Role not found"
+                    );
+                }
+            }
             $user = new User();
 
             $user->setName($request->name);
@@ -88,6 +110,7 @@ class UserController extends Controller
             $user->setMobileNo($request->mobile_no);
             $user->setUsername($request->username);
             $user->setIsActive(true);
+            $user->setRole($role);
 
             $dm->persist($user);
             $dm->flush();
@@ -130,6 +153,10 @@ class UserController extends Controller
             'email' => $exist_user->getEmail(),
             'mobile_no' => $exist_user->getMobileNo(),
             'username' => $exist_user->getUsername(),
+            'role' => $exist_user->getRole() ? [
+                'id' => $exist_user->getRole()->getId(),
+                'name' => $exist_user->getRole()->getName()
+            ] : null,
             'is_active' => $exist_user->isActive()
         ];
 
@@ -151,7 +178,8 @@ class UserController extends Controller
             'name' => 'sometimes|string',
             'email' => 'sometimes|email',
             'mobile_no' => 'sometimes|regex:/^[0-9]{10}$/',
-            'username' => 'sometimes|string'
+            'username' => 'sometimes|string',
+            'role_id' => 'sometimes|nullable|string'
         ]);
 
         if ($validator->fails()) {
@@ -192,6 +220,29 @@ class UserController extends Controller
 
             if ($request->has('password')) {
                 $user->setPassword($request->password);
+            }
+
+            if ($request->has('role_id')) {
+
+                if ($request->role_id === null) {
+
+                    $user->setRole(null);
+                } else {
+
+                    $role = $dm->getRepository(Role::class)
+                        ->find($request->role_id);
+
+                    if (!$role) {
+                        return CommonHelper::response(
+                            false,
+                            404,
+                            null,
+                            "Role not found"
+                        );
+                    }
+
+                    $user->setRole($role);
+                }
             }
 
             $dm->flush();

@@ -28,8 +28,8 @@ return new class extends Migration
                             'mime_type'
                         ],
                         'properties' => [
-                            'task_id'              => ['bsonType' => 'objectId'],
-                            'workflow_stage_id'    => ['bsonType' => 'objectId'],
+                            'task_id'              => ['bsonType' => ['objectId']],
+                            'workflow_stage_id'    => ['bsonType' => ['objectId']],
                             'file_name'            => ['bsonType' => 'string'],
                             'file_path'            => ['bsonType' => 'string'],
                             'mime_type'            => ['bsonType' => 'string'],
@@ -43,7 +43,7 @@ return new class extends Migration
                                     'comment'           
                                 ]
                             ],
-                            'uploaded_by'          => ['bsonType' => 'objectId'],
+                            'uploaded_by'          => ['bsonType' => ['objectId', 'null']],
                             'uploaded_at'          => ['bsonType' => 'date'],
                         ]
                     ]

@@ -34,23 +34,23 @@ return new class extends Migration
                         'properties' => [
 
                             'task_id' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             'from_department_id' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             'to_department_id' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             'from_assignee_id' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             'to_assignee_id' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             'transition_type' => [
@@ -62,11 +62,11 @@ return new class extends Migration
                             ],
 
                             'from_workflow_stage_id' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             'to_workflow_stage_id' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             'reason' => [
@@ -83,7 +83,7 @@ return new class extends Migration
                             ],
 
                             'transitioned_by' => [
-                                'bsonType' => 'objectId'
+                                'bsonType' => ['objectId']
                             ],
 
                             'transitioned_at' => [

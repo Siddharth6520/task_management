@@ -7,6 +7,7 @@ use App\Documents\User;
 use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 
 #[ODM\Document(collection: "projects")]
+#[ODM\HasLifecycleCallbacks]
 #[ODM\UniqueIndex(keys: [
     'project_code' => 'asc'
 ])]
@@ -182,5 +183,17 @@ class Project
         $this->updated_at = $updated_at;
 
         return $this;
+    }
+
+    #[ODM\PrePersist]
+    public function prePersist(): void
+    {
+        $this->created_at = new DateTime();
+    }
+
+    #[ODM\PreUpdate]
+    public function preUpdate(): void
+    {
+        $this->updated_at = new DateTime();
     }
 }

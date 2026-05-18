@@ -2,35 +2,55 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-
-use App\Models\Action;
-
+use App\Documents\Action;
+use Doctrine\ODM\MongoDB\DocumentManager;
 
 class ActionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
+        $dm = app(DocumentManager::class);
+
+        $repo = $dm->getRepository(Action::class);
+
         $actions = [
-            ['name' => 'Create', 'code'=>'CREATE', 'description' => 'Create records'],
-            ['name' => 'Read', 'code'=>'READ', 'description' => 'Read records'],
-            ['name' => 'Update', 'code'=>'UPDATE', 'description' => 'Update records'],
-            ['name' => 'Delete', 'code'=>'DELETE', 'description' => 'Delete records'],  
+            [
+                'name' => 'Create',
+                'code' => 'CREATE',
+                'description' => 'Create action',
+            ],
+            [
+                'name' => 'Read',
+                'code' => 'READ',
+                'description' => 'Read action',
+            ],
+            [
+                'name' => 'Update',
+                'code' => 'UPDATE',
+                'description' => 'Update action',
+            ],
+            [
+                'name' => 'Delete',
+                'code' => 'DELETE',
+                'description' => 'Delete action',
+            ],
         ];
 
-        foreach ($actions as $action) {
+        foreach ($actions as $actionData) {
 
-            Action::updateOrCreate(
-                [
-                    'code' => $action['code']
-                ],
-                $action
-            );
+            $action = $repo->findOneBy([
+                'code' => $actionData['code']
+            ]) ?? new Action();
+
+            $action
+                ->setName($actionData['name'])
+                ->setCode($actionData['code'])
+                ->setDescription($actionData['description']);
+
+            $dm->persist($action);
         }
+
+        $dm->flush();
     }
 }

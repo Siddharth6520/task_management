@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Documents\Tasks;
+use App\Documents\Task;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
@@ -20,7 +20,7 @@ class CheckTaskSla extends Command
         $now = new \DateTime();
 
         $tasks = $dm
-            ->createQueryBuilder(Tasks::class)
+            ->createQueryBuilder(Task::class)
             ->field('is_sla_breached')->equals(false)
             ->field('execution_status')->notIn(['completed', 'cancelled','closed', 'rejected'])
             ->field('due_at')->exists(true)

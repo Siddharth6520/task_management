@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Documents\Tasks;
+use App\Documents\Task;
 use App\Documents\Department;
 use App\Documents\Project;
 use App\Documents\TaskStatusHistory;
 use App\Documents\User;
-use App\Documents\WorkTemplate;
-use App\Documents\WorkStage;
+use App\Documents\WorkFlowTemplate;
+// use App\Documents\WorkTemplate;
+use App\Documents\WorkFlowStages;
 
 use App\Http\Requests\TaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
@@ -17,53 +18,108 @@ use App\Http\Requests\UpdateTaskRequest;
 use App\Helpers\CommonHelper;
 // use Illuminate\Http\Request;
 // use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 
-class TasksController extends Controller
+class TaskController extends Controller
 {
 
     public function index(DocumentManager $dm)
     {
-        $tasks = $dm->getRepository(Tasks::class)->findAll();
+        $Task = $dm->getRepository(Task::class)->findAll();
 
         $result = [];
 
-        foreach ($tasks as $task) {
+        foreach ($Task as $task) {
+
+            $attachments = [];
+
+            foreach ($task->getAttachments() as $attachment) {
+
+                $attachments[] = [
+                    'id' => $attachment->getId(),
+
+                    'file_name' => $attachment->getFileName(),
+
+                    'url' => Storage::url(
+                        $attachment->getFilePath()
+                    ),
+                ];
+            }
+
             $result[] = [
+
                 'id' => $task->getId(),
+
                 'task_code' => $task->getTaskCode(),
+
                 'title' => $task->getTitle(),
+
                 'description' => $task->getDescription(),
-                'project' => [
-                    'id' => $task->getProject()->getId(),
-                    'name' => $task->getProject()->getId()
-                ],
-                'department' => [
-                    'id' => $task->getCurrentDepartment()->getId(),
-                    'name' => $task->getCurrentDepartment()->getName()
-                ],
 
-                'assignee' => [
-                    'id' => $task->getCurrentAssignee()->getId(),
-                    'name' => $task->getCurrentAssignee()->getName()
-                ],
+                'project' => $task->getProject()
+                    ? [
+                        'id' => $task->getProject()->getId(),
+                        'name' => $task->getProject()->getName()
+                    ]
+                    : null,
 
-                'workflow_template' => $task->getWorkflowTemplate()->getId(),
-                'current_workflow_stage' => [
-                    'id' => $task->getCurrentWorkflowStage()->getId(),
-                    'name' => $task->getCurrentWorkflowStage()->getName()
-                ],
+                'department' => $task->getCurrentDepartment()
+                    ? [
+                        'id' => $task->getCurrentDepartment()->getId(),
+                        'name' => $task->getCurrentDepartment()->getName()
+                    ]
+                    : null,
+
+                'assignee' => $task->getCurrentAssignee()
+                    ? [
+                        'id' => $task->getCurrentAssignee()->getId(),
+                        'name' => $task->getCurrentAssignee()->getName()
+                    ]
+                    : null,
+
+                'workflow_template' => $task->getWorkflowTemplate()
+                    ? [
+                        'id' => $task->getWorkflowTemplate()->getId(),
+                        'name' => $task->getWorkflowTemplate()->getName()
+                    ]
+                    : null,
+
+                'current_workflow_stage' => $task->getCurrentWorkflowStage()
+                    ? [
+                        'id' => $task->getCurrentWorkflowStage()->getId(),
+                        'name' => $task->getCurrentWorkflowStage()->getWorkflowTemplate()->getName() . " - " . $task->getCurrentWorkflowStage()->getStageName()
+                    ]
+                    : null,
+
                 'execution_status' => $task->getExecutionStatus(),
-                // 'created_at' => $task->getCreatedAt(),
-                // 'updated_at' => $task->getUpdatedAt(),
+
+                'priority' => $task->getPriority(),
+
+                'is_sla_breached' => $task->isSlaBreached(),
+
+                'sla_breach_count' => $task->getSlaBreachCount(),
+
+                'started_at' => $task->getStartedAt()?->format('Y-m-d H:i:s'),
+
+                'due_at' => $task->getDueAt()?->format('Y-m-d H:i:s'),
+
+                'completed_at' => $task->getCompletedAt()?->format('Y-m-d H:i:s'),
+
+                'attachments' => $attachments,
+
+                'created_at' => $task->getCreatedAt()?->format('Y-m-d H:i:s'),
+
+                'updated_at' => $task->getUpdatedAt()?->format('Y-m-d H:i:s'),
             ];
         }
+
         return CommonHelper::response(
             true,
             200,
             $result,
-            "Tasks retrieved successfully"
+            "Task retrieved successfully"
         );
     }
 
@@ -135,7 +191,7 @@ class TasksController extends Controller
             }
 
             $workflowTemplate = $dm
-                ->getRepository(WorkTemplate::class)
+                ->getRepository(WorkFlowTemplate::class)
                 ->find($request->workflow_template_id);
 
             if (!$workflowTemplate) {
@@ -151,7 +207,7 @@ class TasksController extends Controller
             }
 
             $workflowStage = $dm
-                ->getRepository(WorkStage::class)
+                ->getRepository(WorkFlowStages::class)
                 ->find($request->current_workflow_stage_id);
 
             if (!$workflowStage) {
@@ -166,7 +222,7 @@ class TasksController extends Controller
                 );
             }
 
-            $task = new Tasks();
+            $task = new Task();
 
             $task->setTaskCode($request->task_code);
 
@@ -202,8 +258,7 @@ class TasksController extends Controller
                     clone $task->getDueAt()
                 );
             }
-            // $task->setCreatedAt(new \DateTime());
-            // $task->setUpdatedAt(new \DateTime());
+
             $task->setCreatedBy($assignee);
             $task->setUpdatedBy($assignee);
             $dm->persist($task);
@@ -257,9 +312,10 @@ class TasksController extends Controller
      */
     public function show(string $id, DocumentManager $dm)
     {
-        $task = $dm->getRepository(Tasks::class)->find($id);
+        $task = $dm->getRepository(Task::class)->find($id);
 
         if (!$task) {
+
             return CommonHelper::response(
                 false,
                 404,
@@ -268,10 +324,110 @@ class TasksController extends Controller
             );
         }
 
+        $attachments = [];
+
+        foreach ($task->getAttachments() as $attachment) {
+
+            $attachments[] = [
+                'id' => $attachment->getId(),
+
+                'file_name' => $attachment->getFileName(),
+
+                'file_url' => Storage::url(
+                    $attachment->getFilePath()
+                ),
+
+                'mime_type' => $attachment->getMimeType(),
+
+                'workflow_stage' => $attachment->getWorkflowStage() ? [
+                    'id' => $attachment->getWorkflowStage()->getId(),
+                    'name' => $attachment->getWorkflowStage()->getName()
+                ] : null,
+
+                'uploaded_by' => $attachment->getUploadedBy() ? [
+                    'id' => $attachment->getUploadedBy()->getId(),
+                    'name' => $attachment->getUploadedBy()->getName()
+                ] : null,
+
+                'uploaded_at' => $attachment
+                    ->getUploadedAt()
+                    ?->format('Y-m-d H:i:s'),
+            ];
+        }
+
+        $result = [
+            'id' => $task->getId(),
+
+            'task_code' => $task->getTaskCode(),
+
+            'title' => $task->getTitle(),
+
+            'description' => $task->getDescription(),
+
+            'project' => $task->getProject() ? [
+                'id' => $task->getProject()->getId(),
+                'name' => $task->getProject()->getName()
+            ] : null,
+
+            'department' => $task->getCurrentDepartment() ? [
+                'id' => $task->getCurrentDepartment()->getId(),
+                'name' => $task->getCurrentDepartment()->getName()
+            ] : null,
+
+            'assignee' => $task->getCurrentAssignee() ? [
+                'id' => $task->getCurrentAssignee()->getId(),
+                'name' => $task->getCurrentAssignee()->getName()
+            ] : null,
+
+            'workflow_template' => $task->getWorkflowTemplate() ? [
+                'id' => $task->getWorkflowTemplate()->getId(),
+                'name' => $task->getWorkflowTemplate()->getName()
+            ] : null,
+
+            'current_workflow_stage' => $task->getCurrentWorkflowStage() ? [
+                'id' => $task->getCurrentWorkflowStage()->getId(),
+                'name' => $task->getCurrentWorkflowStage()->getWorkflowTemplate()->getName() . " - " . $task->getCurrentWorkflowStage()->getStageName() 
+            ] : null,
+
+            'execution_status' => $task->getExecutionStatus(),
+
+            'priority' => $task->getPriority(),
+
+            'started_at' => $task
+                ->getStartedAt()
+                ?->format('Y-m-d H:i:s'),
+
+            'due_at' => $task
+                ->getDueAt()
+                ?->format('Y-m-d H:i:s'),
+
+            'completed_at' => $task
+                ->getCompletedAt()
+                ?->format('Y-m-d H:i:s'),
+
+            'original_due_at' => $task
+                ->getOriginalDueAt()
+                ?->format('Y-m-d H:i:s'),
+
+            'is_sla_breached' => $task->isSlaBreached(),
+
+            'sla_breach_count' => $task->getSlaBreachCount(),
+
+            'attachments' => $attachments,
+
+            'created_at' => $task
+                ->getCreatedAt()
+                ?->format('Y-m-d H:i:s'),
+
+            'updated_at' => $task
+                ->getUpdatedAt()
+                ?->format('Y-m-d H:i:s'),
+        ];
+
         return CommonHelper::response(
             true,
             200,
-            $task,
+            $result,
             "Task retrieved successfully"
         );
     }
@@ -291,7 +447,7 @@ class TasksController extends Controller
         try {
 
             $task = $dm
-                ->getRepository(Tasks::class)
+                ->getRepository(Task::class)
                 ->find($id);
 
             if (!$task) {
@@ -374,7 +530,7 @@ class TasksController extends Controller
             if ($request->filled('workflow_template_id')) {
 
                 $workflowTemplate = $dm
-                    ->getRepository(WorkTemplate::class)
+                    ->getRepository(WorkFlowTemplate::class)
                     ->find($request->workflow_template_id);
 
                 if (!$workflowTemplate) {
@@ -395,7 +551,7 @@ class TasksController extends Controller
             if ($request->filled('current_workflow_stage_id')) {
 
                 $workflowStage = $dm
-                    ->getRepository(WorkStage::class)
+                    ->getRepository(WorkFlowStages::class)
                     ->find($request->current_workflow_stage_id);
 
                 if (!$workflowStage) {
@@ -580,7 +736,7 @@ class TasksController extends Controller
         try {
 
             $task = $dm
-                ->getRepository(Tasks::class)
+                ->getRepository(Task::class)
                 ->find($id);
 
             if (!$task) {

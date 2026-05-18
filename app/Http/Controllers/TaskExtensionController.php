@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use DateTime;
 
 use App\Documents\User;
-use App\Documents\Tasks;
+use App\Documents\Task;
 use App\Documents\TaskExtension;
 
 use App\Helpers\CommonHelper;
@@ -18,6 +18,32 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 
 class TaskExtensionController extends Controller
 {
+
+
+    public function index(DocumentManager $dm)
+    {
+        $taskExtensions = $dm
+            ->getRepository(TaskExtension::class)
+            ->findAll();
+
+        $data = [];
+
+        foreach ($taskExtensions as $taskExtension) {
+            $data[] = [
+                'id' => $taskExtension->getId(),
+                'name' => $taskExtension->getName(),
+                // add remaining fields
+            ];
+        }
+
+        return CommonHelper::response(
+            true,
+            200,
+            $data,
+            "Task extensions fetched successfully"
+        );
+    }
+
     //request extension
     public function store(
         Request $request,
@@ -38,7 +64,7 @@ class TaskExtensionController extends Controller
         try {
 
             $task = $dm
-                ->getRepository(Tasks::class)
+                ->getRepository(Task::class)
                 ->find($taskId);
 
             if (!$task) {
@@ -362,9 +388,9 @@ class TaskExtensionController extends Controller
 
 
 
-  
+
     //reject extension
-    public function reject(Request $request, string $extensionId, DocumentManager $dm) 
+    public function reject(Request $request, string $extensionId, DocumentManager $dm)
     {
 
         $request->validate([

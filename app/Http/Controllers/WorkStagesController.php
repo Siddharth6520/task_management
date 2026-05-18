@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use App\Documents\WorkStage;
+use App\Documents\WorkFlowStages;
 use App\Documents\Department;
 use App\Documents\WorkFlowTemplate;
 use App\Documents\Role;
@@ -26,7 +26,7 @@ class WorkStagesController extends Controller
         try {
 
             $stages = $this->dm
-                ->getRepository(WorkStage::class)
+                ->getRepository(WorkFlowStages::class)
                 ->findAll();
 
             $data = [];
@@ -179,7 +179,7 @@ class WorkStagesController extends Controller
             */
 
             $existingStage = $this->dm
-                ->getRepository(WorkStage::class)
+                ->getRepository(WorkFlowStages::class)
                 ->findOneBy([
                     'workflow_template' => $workflowTemplate,
                     'stage_order' => (int) $request->stage_order,
@@ -201,7 +201,7 @@ class WorkStagesController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            $stage = new WorkStage();
+            $stage = new WorkFlowStages();
 
             $stage->setWorkflowTemplate($workflowTemplate);
             $stage->setStageName($request->stage_name);
@@ -308,7 +308,7 @@ class WorkStagesController extends Controller
         try {
 
             $stage = $this->dm
-                ->getRepository(WorkStage::class)
+                ->getRepository(WorkFlowStages::class)
                 ->find($id);
 
             if (!$stage) {
@@ -383,7 +383,7 @@ class WorkStagesController extends Controller
         try {
 
             $stage = $this->dm
-                ->getRepository(WorkStage::class)
+                ->getRepository(WorkFlowStages::class)
                 ->find($id);
 
             if (!$stage) {
@@ -470,7 +470,7 @@ class WorkStagesController extends Controller
         try {
 
             $stage = $this->dm
-                ->getRepository(WorkStage::class)
+                ->getRepository(WorkFlowStages::class)
                 ->find($id);
 
             if (!$stage) {

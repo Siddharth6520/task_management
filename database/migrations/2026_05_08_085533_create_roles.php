@@ -36,27 +36,27 @@ return new class extends Migration
                             ],
 
                             'description' => [
-                                'bsonType' => 'string'
+                                'bsonType' => ['string', 'null']
                             ],
 
                             'is_active' => [
                                 'bsonType' => 'bool'
                             ],
+
                             'created_by' => [
-                                'bsonType' => 'objectId',
-                                'description' => 'Created user id'
+                                'bsonType' => ['objectId', 'null']
                             ],
 
                             'created_at' => [
-                                'bsonType' => 'date'
+                                'bsonType' => ['date', 'null']
                             ],
+
                             'updated_by' => [
-                                'bsonType' => 'objectId',
-                                'description' => 'Updated user id'
+                                'bsonType' => ['objectId', 'null']
                             ],
 
                             'updated_at' => [
-                                'bsonType' => 'date'
+                                'bsonType' => ['date', 'null']
                             ]
                         ]
                     ]
