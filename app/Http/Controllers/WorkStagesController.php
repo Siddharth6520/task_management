@@ -75,7 +75,6 @@ class WorkStagesController extends Controller
                 $data,
                 'Workflow stages fetched successfully'
             );
-
         } catch (\Throwable $e) {
 
             return response()->json([
@@ -93,21 +92,49 @@ class WorkStagesController extends Controller
     {
         try {
 
-            $validation = Validator::make($request->all(), [
-                'workflow_template_id' => 'required|string',
-                'stage_name' => 'required|string|max:255',
-                'stage_order' => 'required|integer|min:1',
-                'department_id' => 'required|string',
-                'role_id' => 'nullable|string',
+            /*
+        |--------------------------------------------------------------------------
+        | Validation
+        |--------------------------------------------------------------------------
+        */
 
-                'can_skip' => 'nullable|boolean',
-                'can_rework' => 'nullable|boolean',
-                'is_mandatory' => 'nullable|boolean',
-                'is_final_stage' => 'nullable|boolean',
-                'is_active' => 'nullable|boolean',
+            $validation = Validator::make(
+                $request->all(),
+                [
+                    'workflow_template_id' => 'required|string',
 
-                'sla_hours' => 'nullable|numeric|min:0',
-            ]);
+                    'stages' => 'required|array|min:1',
+
+                    'stages.*.stage_name' => 'required|string|max:255',
+
+                    'stages.*.stage_order' =>
+                    'required|integer|min:1',
+
+                    'stages.*.department_id' =>
+                    'required|string',
+
+                    'stages.*.role_id' =>
+                    'nullable|string',
+
+                    'stages.*.can_skip' =>
+                    'nullable|boolean',
+
+                    'stages.*.can_rework' =>
+                    'nullable|boolean',
+
+                    'stages.*.is_mandatory' =>
+                    'nullable|boolean',
+
+                    'stages.*.is_final_stage' =>
+                    'nullable|boolean',
+
+                    'stages.*.is_active' =>
+                    'nullable|boolean',
+
+                    'stages.*.sla_hours' =>
+                    'nullable|numeric|min:0',
+                ]
+            );
 
             if ($validation->fails()) {
 
@@ -119,15 +146,20 @@ class WorkStagesController extends Controller
                 );
             }
 
+
             /*
-            |--------------------------------------------------------------------------
-            | Fetch References
-            |--------------------------------------------------------------------------
-            */
+        |--------------------------------------------------------------------------
+        | Workflow template check
+        |--------------------------------------------------------------------------
+        */
 
             $workflowTemplate = $this->dm
-                ->getRepository(WorkFlowTemplate::class)
-                ->find($request->workflow_template_id);
+                ->getRepository(
+                    WorkFlowTemplate::class
+                )
+                ->find(
+                    $request->workflow_template_id
+                );
 
             if (!$workflowTemplate) {
 
@@ -139,169 +171,185 @@ class WorkStagesController extends Controller
                 );
             }
 
-            $department = $this->dm
-                ->getRepository(Department::class)
-                ->find($request->department_id);
+            /*
+        |--------------------------------------------------------------------------
+        | Prevent duplicate orders inside request itself
+        |--------------------------------------------------------------------------
+        */
 
-            if (!$department) {
+            $orders = array_column(
+                $request->stages,
+                'stage_order'
+            );
+
+            if (
+                count($orders)
+                != count(array_unique($orders))
+            ) {
 
                 return CommonHelper::response(
                     false,
-                    404,
+                    400,
                     null,
-                    'Department not found'
+                    'Duplicate stage order in request'
                 );
             }
 
-            $role = null;
-
-            if ($request->filled('role_id')) {
-
-                $role = $this->dm
-                    ->getRepository(Role::class)
-                    ->find($request->role_id);
-
-                if (!$role) {
-
-                    return CommonHelper::response(
-                        false,
-                        404,
-                        null,
-                        'Role not found'
-                    );
-                }
-            }
-
             /*
+        |--------------------------------------------------------------------------
+        | Transaction
+        |--------------------------------------------------------------------------
+        */
+
+            $session = $this->dm
+                ->getClient()
+                ->startSession();
+
+            $session->startTransaction();
+
+            foreach ($request->stages as $item) {
+
+                /*
             |--------------------------------------------------------------------------
-            | Duplicate Stage Order Check
+            | Department
             |--------------------------------------------------------------------------
             */
 
-            $existingStage = $this->dm
-                ->getRepository(WorkFlowStages::class)
-                ->findOneBy([
-                    'workflow_template' => $workflowTemplate,
-                    'stage_order' => (int) $request->stage_order,
-                ]);
+                $department = $this->dm
+                    ->getRepository(
+                        Department::class
+                    )
+                    ->find(
+                        $item['department_id']
+                    );
 
-            if ($existingStage) {
+                if (!$department) {
 
-                return CommonHelper::response(
-                    false,
-                    409,
-                    null,
-                    'Stage order already exists for this workflow'
-                );
-            }
+                    throw new \Exception(
+                        "Department not found : "
+                            . $item['department_id']
+                    );
+                }
 
-            /*
+                /*
+            |--------------------------------------------------------------------------
+            | Existing stage order check
+            |--------------------------------------------------------------------------
+            */
+
+                $exist = $this->dm
+                    ->getRepository(
+                        WorkFlowStages::class
+                    )
+                    ->findOneBy([
+                        'workflow_template' =>
+                        $workflowTemplate,
+
+                        'stage_order' =>
+                        (int)$item['stage_order']
+                    ]);
+
+                if ($exist) {
+
+                    throw new \Exception(
+                        'Stage order '
+                            . $item['stage_order']
+                            . ' already exists'
+                    );
+                }
+
+                /*
             |--------------------------------------------------------------------------
             | Create Stage
             |--------------------------------------------------------------------------
             */
 
-            $stage = new WorkFlowStages();
+                $stage = new WorkFlowStages();
 
-            $stage->setWorkflowTemplate($workflowTemplate);
-            $stage->setStageName($request->stage_name);
-            $stage->setStageOrder((int) $request->stage_order);
-            $stage->setDepartment($department);
-            $stage->setRole($role);
+                $stage->setWorkflowTemplate(
+                    $workflowTemplate
+                );
 
-            $stage->setCanSkip(
-                filter_var(
-                    $request->can_skip ?? false,
-                    FILTER_VALIDATE_BOOLEAN
-                )
-            );
+                $stage->setStageName(
+                    $item['stage_name']
+                );
 
-            $stage->setCanRework(
-                filter_var(
-                    $request->can_rework ?? false,
-                    FILTER_VALIDATE_BOOLEAN
-                )
-            );
+                $stage->setStageOrder(
+                    (int)$item['stage_order']
+                );
 
-            $stage->setIsMandatory(
-                filter_var(
-                    $request->is_mandatory ?? true,
-                    FILTER_VALIDATE_BOOLEAN
-                )
-            );
+                $stage->setDepartment(
+                    $department
+                );
 
-            $stage->setIsFinalStage(
-                filter_var(
-                    $request->is_final_stage ?? false,
-                    FILTER_VALIDATE_BOOLEAN
-                )
-            );
+                $stage->setCanSkip(
+                    $item['can_skip']
+                        ?? false
+                );
 
-            $stage->setIsActive(
-                filter_var(
-                    $request->is_active ?? true,
-                    FILTER_VALIDATE_BOOLEAN
-                )
-            );
+                $stage->setCanRework(
+                    $item['can_rework']
+                        ?? false
+                );
 
-            $stage->setSlaHours(
-                $request->filled('sla_hours')
-                    ? (float) $request->sla_hours
-                    : null
-            );
+                $stage->setIsMandatory(
+                    $item['is_mandatory']
+                        ?? true
+                );
 
-            $stage->setCreatedAt(new \DateTime());
-            $stage->setUpdatedAt(new \DateTime());
+                $stage->setIsFinalStage(
+                    $item['is_final_stage']
+                        ?? false
+                );
 
-            /*
-            |--------------------------------------------------------------------------
-            | Audit
-            |--------------------------------------------------------------------------
-            */
+                $stage->setIsActive(
+                    $item['is_active']
+                        ?? true
+                );
 
-            // Uncomment after JWT/Auth setup
+                $stage->setSlaHours(
+                    $item['sla_hours']
+                        ?? null
+                );
 
-            // $user = auth()->user();
+                $stage->setCreatedAt(
+                    new \DateTime()
+                );
 
-            // if ($user) {
-            //     $stage->setCreatedBy($user);
-            //     $stage->setUpdatedBy($user);
-            // }
+                $stage->setUpdatedAt(
+                    new \DateTime()
+                );
 
-            /*
-            |--------------------------------------------------------------------------
-            | Save
-            |--------------------------------------------------------------------------
-            */
+                $this->dm->persist(
+                    $stage
+                );
+            }
 
-            $this->dm->persist($stage);
             $this->dm->flush();
+
+            $session->commitTransaction();
 
             return CommonHelper::response(
                 true,
                 201,
-                [
-                    'id' => $stage->getId()
-                ],
-                'Workflow stage created successfully'
+                null,
+                'Workflow stages created successfully'
             );
-
         } catch (\Throwable $e) {
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Internal Server Error',
-                'error' => $e->getMessage(),
-                'line' => $e->getLine(),
-            ], 500);
+            if (isset($session)) {
+                $session->abortTransaction();
+            }
+
+            return CommonHelper::response(
+                false,
+                500,
+                null,
+                $e->getMessage()
+            );
         }
     }
 
-   /*
-    |--------------------------------------------------------------------------
-    | Show Single Stage
-    |--------------------------------------------------------------------------
-    */
 
     public function show(string $id)
     {
@@ -361,7 +409,6 @@ class WorkStagesController extends Controller
                 $data,
                 'Workflow stage fetched successfully'
             );
-
         } catch (\Throwable $e) {
 
             return response()->json([
@@ -372,18 +419,43 @@ class WorkStagesController extends Controller
         }
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Update Workflow Stage
-    |--------------------------------------------------------------------------
-    */
 
     public function update(Request $request, string $id)
     {
         try {
 
+            $validation = Validator::make(
+                $request->all(),
+                [
+                    'stage_name' => 'sometimes|string|max:255',
+                    'stage_order' => 'sometimes|integer|min:1',
+                    'department_id' => 'sometimes|string',
+                    'role_id' => 'nullable|string',
+
+                    'can_skip' => 'sometimes|boolean',
+                    'can_rework' => 'sometimes|boolean',
+                    'is_mandatory' => 'sometimes|boolean',
+                    'is_final_stage' => 'sometimes|boolean',
+                    'is_active' => 'sometimes|boolean',
+
+                    'sla_hours' => 'nullable|numeric|min:0',
+                ]
+            );
+
+            if ($validation->fails()) {
+
+                return CommonHelper::response(
+                    false,
+                    422,
+                    null,
+                    $validation->errors()
+                );
+            }
+
             $stage = $this->dm
-                ->getRepository(WorkFlowStages::class)
+                ->getRepository(
+                    WorkFlowStages::class
+                )
                 ->find($id);
 
             if (!$stage) {
@@ -396,49 +468,154 @@ class WorkStagesController extends Controller
                 );
             }
 
-            if ($request->filled('stage_name')) {
-                $stage->setStageName($request->stage_name);
+            if ($request->filled('stage_order')) {
+
+                $exist = $this->dm
+                    ->createQueryBuilder(
+                        WorkFlowStages::class
+                    )
+                    ->field('workflow_template')
+                    ->references(
+                        $stage->getWorkflowTemplate()
+                    )
+                    ->field('stage_order')
+                    ->equals(
+                        (int)$request->stage_order
+                    )
+                    ->field('id')
+                    ->notEqual($id)
+                    ->getQuery()
+                    ->getSingleResult();
+
+                if ($exist) {
+
+                    return CommonHelper::response(
+                        false,
+                        409,
+                        null,
+                        'Stage order already exists'
+                    );
+                }
+
+                $stage->setStageOrder(
+                    (int)$request->stage_order
+                );
             }
 
-            if ($request->filled('stage_order')) {
-                $stage->setStageOrder((int) $request->stage_order);
+            /*
+        |--------------------------------------------------------------------------
+        | Department update
+        |--------------------------------------------------------------------------
+        */
+
+            if ($request->filled('department_id')) {
+
+                $department = $this->dm
+                    ->getRepository(
+                        Department::class
+                    )
+                    ->find(
+                        $request->department_id
+                    );
+
+                if (!$department) {
+
+                    return CommonHelper::response(
+                        false,
+                        404,
+                        null,
+                        'Department not found'
+                    );
+                }
+
+                $stage->setDepartment(
+                    $department
+                );
+            }
+
+            /*
+        |--------------------------------------------------------------------------
+        | Role update
+        |--------------------------------------------------------------------------
+        */
+
+            if ($request->has('role_id')) {
+
+                if ($request->filled('role_id')) {
+
+                    $role = $this->dm
+                        ->getRepository(
+                            Role::class
+                        )
+                        ->find(
+                            $request->role_id
+                        );
+
+                    if (!$role) {
+
+                        return CommonHelper::response(
+                            false,
+                            404,
+                            null,
+                            'Role not found'
+                        );
+                    }
+
+                    $stage->setRole($role);
+                } else {
+
+                    $stage->setRole(null);
+                }
+            }
+
+            if ($request->filled('stage_name')) {
+                $stage->setStageName(
+                    $request->stage_name
+                );
             }
 
             if ($request->has('can_skip')) {
                 $stage->setCanSkip(
-                    filter_var($request->can_skip, FILTER_VALIDATE_BOOLEAN)
+                    $request->boolean('can_skip')
                 );
             }
 
             if ($request->has('can_rework')) {
                 $stage->setCanRework(
-                    filter_var($request->can_rework, FILTER_VALIDATE_BOOLEAN)
+                    $request->boolean('can_rework')
                 );
             }
 
             if ($request->has('is_mandatory')) {
                 $stage->setIsMandatory(
-                    filter_var($request->is_mandatory, FILTER_VALIDATE_BOOLEAN)
+                    $request->boolean('is_mandatory')
                 );
             }
 
             if ($request->has('is_final_stage')) {
                 $stage->setIsFinalStage(
-                    filter_var($request->is_final_stage, FILTER_VALIDATE_BOOLEAN)
+                    $request->boolean('is_final_stage')
                 );
             }
 
             if ($request->has('is_active')) {
                 $stage->setIsActive(
-                    filter_var($request->is_active, FILTER_VALIDATE_BOOLEAN)
+                    $request->boolean('is_active')
                 );
             }
 
-            if ($request->filled('sla_hours')) {
-                $stage->setSlaHours((float) $request->sla_hours);
+            if ($request->has('sla_hours')) {
+
+                $stage->setSlaHours(
+                    $request->filled('sla_hours')
+                        ? (float)$request->sla_hours
+                        : null
+                );
             }
 
-            $stage->setUpdatedAt(new \DateTime());
+            $stage->setUpdatedAt(
+                new \DateTime()
+            );
 
             $this->dm->flush();
 
@@ -448,22 +625,16 @@ class WorkStagesController extends Controller
                 null,
                 'Workflow stage updated successfully'
             );
-
         } catch (\Throwable $e) {
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Internal Server Error',
-                'error' => $e->getMessage(),
-            ], 500);
+            return CommonHelper::response(
+                false,
+                500,
+                null,
+                $e->getMessage()
+            );
         }
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Delete Workflow Stage
-    |--------------------------------------------------------------------------
-    */
 
     public function destroy(string $id)
     {
@@ -492,7 +663,6 @@ class WorkStagesController extends Controller
                 null,
                 'Workflow stage deleted successfully'
             );
-
         } catch (\Throwable $e) {
 
             return response()->json([
