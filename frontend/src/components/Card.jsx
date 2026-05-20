@@ -28,13 +28,19 @@ const Card = () => {
     ];
 
     return (
+        <div>
+           <h1 className="text-4xl text-center pb-4 font-medium">Features</h1>
         <div className="grid grid-cols-3 gap-6 m-5 w-auto ">
+         
             {features.map((feature, index) => (
-                <div className=" bg-gray-500 p-10" key={index}>
+                <div className=" p-10 border-0 rounded-2xl backdrop-blur-lg shadow-xl
+                transition-all duration-300 hover:translate-y-1
+                hover:shadow-2xl" key={index}>
                     <h3 className="font-bold pb-2 text-xl text-black">{feature.name}</h3>
-                    <p className="text-white">{feature.description}</p>
+                    <p>{feature.description}</p>
                 </div>
             ))}
+        </div>
         </div>
     );
 };

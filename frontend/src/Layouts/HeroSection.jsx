@@ -3,28 +3,38 @@ import Card from "../components/Card";
 const HeroSection = () => {
     return (
         <div>
-            <section className="w-full  flex flex-row items-center m-3 p-4 gap-8 rounded-lg">
+            <section className="container mx-auto px-10 py-20">
+                <div className="grid lg:grid-cols-2 items-center gap-16">
 
-                <div>
-                    <div className="inline-flex items-center gap-1.5 bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full mb-6">
+                    <div>
+                        <span className="bg-indigo-50 text-indigo-600 px-4 py-2 rounded-full">
+                            Productivity made simple
+                        </span>
+
+                        <h1 className="text-5xl font-bold text-slate-900 mt-6 leading-tight">
+                            Simplify your workflow.
+                            <span className="text-indigo-600">
+                                {" "}Master your day.
+                            </span>
+                        </h1>
+
+                        <p className="mt-6 text-slate-600 text-lg">
+                            The intuitive task management interface designed
+                            to eliminate clutter, organize priorities,
+                            and boost collaboration.
+                        </p>
+{/* 
+                        <div className="flex gap-4 mt-8">
+                            <Button title="Get Started" />
+                            <Button title="Learn More" />
+                        </div> */}
                     </div>
 
-                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
-                        Simplify your workflow.
-                        <span className="text-indigo-600">
-                            Master your day.
-                        </span>
-                    </h1>
+                    <div>
+                        <img src={HeroImg} />
+                    </div>
 
-                    <p className="mt-6 text-base sm:text-lg text-slate-600 leading-relaxed">
-                        The intuitive task management interface designed to eliminate clutter, organize priorities, and boost team collaboration.
-                    </p>
                 </div>
-
-                <div>
-                    <img src={HeroImg} alt="Heroimage" className="w-125" />
-                </div>
-
             </section>
 
             <section id="features">
