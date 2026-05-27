@@ -20,10 +20,10 @@ return new class extends Migration
                         'bsonType' => 'object',
 
                         'required' => [
-                            'workflow_template_id',
+                            'workflow_template',
                             'stage_name',
                             'stage_order',
-                            'department_id',
+                            'department',
                             'can_skip',
                             'can_rework',
                             'is_mandatory',
@@ -34,15 +34,9 @@ return new class extends Migration
 
                         'properties' => [
 
-                            'workflow_template_id' => [
-                                'bsonType' => ['objectId']
+                            'workflow_template' => [
+                                'bsonType' => 'objectId'
                             ],
-
-                            /*
-                            |--------------------------------------------------------------------------
-                            | Stage Information
-                            |--------------------------------------------------------------------------
-                            */
 
                             'stage_name' => [
                                 'bsonType' => 'string'
@@ -52,18 +46,12 @@ return new class extends Migration
                                 'bsonType' => 'int'
                             ],
 
-                            'department_id' => [
-                                'bsonType' => ['objectId']
+                            'department' => [
+                                'bsonType' => 'objectId'
                             ],
 
-                            /*
-                            |--------------------------------------------------------------------------
-                            | Permissions & Workflow Rules
-                            |--------------------------------------------------------------------------
-                            */
-
-                            'role_id' => [
-                                'bsonType' => ['objectId']
+                            'role' => [
+                                'bsonType' => ['objectId', 'null']
                             ],
 
                             'can_skip' => [
@@ -82,31 +70,13 @@ return new class extends Migration
                                 'bsonType' => 'bool'
                             ],
 
-                            /*
-                            |--------------------------------------------------------------------------
-                            | SLA
-                            |--------------------------------------------------------------------------
-                            */
-
                             'sla_hours' => [
-                                'bsonType' => 'double'
+                                'bsonType' => ['double', 'null']
                             ],
-
-                            /*
-                            |--------------------------------------------------------------------------
-                            | Stage Status
-                            |--------------------------------------------------------------------------
-                            */
 
                             'is_active' => [
                                 'bsonType' => 'bool'
                             ],
-
-                            /*
-                            |--------------------------------------------------------------------------
-                            | Audit
-                            |--------------------------------------------------------------------------
-                            */
 
                             'created_by' => [
                                 'bsonType' => ['objectId', 'null']
@@ -139,14 +109,14 @@ return new class extends Migration
             ->getMongoDB()
             ->selectCollection('workflow_stages')
             ->createIndex([
-                'workflow_template_id' => 1
+                'workflow_template' => 1
             ]);
 
         DB::connection('mongodb')
             ->getMongoDB()
             ->selectCollection('workflow_stages')
             ->createIndex([
-                'department_id' => 1
+                'department' => 1
             ]);
 
         /*
@@ -160,7 +130,7 @@ return new class extends Migration
             ->selectCollection('workflow_stages')
             ->createIndex(
                 [
-                    'workflow_template_id' => 1,
+                    'workflow_template' => 1,
                     'stage_order' => 1
                 ],
                 [

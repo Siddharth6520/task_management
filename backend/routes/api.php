@@ -17,7 +17,9 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TaskStatusHistoryController;
 use App\Http\Controllers\TaskExtensionController;
 use App\Http\Controllers\AttachmentController;
+use App\Http\Controllers\ListController;
 use App\Http\Controllers\TaskWorkflowController;
+
 
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -246,3 +248,20 @@ Route::middleware(['jwt'])->prefix('attachments')->group(function () {
             ->middleware('permission:TASKS_VIEW');
     });
 });
+
+Route::middleware(['jwt'])
+    ->prefix('list')
+    ->group(function () {
+
+        Route::get('/', [ListController::class, 'index']);
+
+        Route::get('/departments', [ListController::class, 'departments']);
+
+        Route::get('/roles', [ListController::class, 'roles']);
+
+        Route::get('/users', [ListController::class, 'users']);
+
+        Route::get('/teams', [ListController::class, 'teams']);
+
+        Route::get('/workflow-templates', [ListController::class, 'workflowTemplates']);
+    });

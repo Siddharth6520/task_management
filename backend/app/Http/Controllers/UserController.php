@@ -254,7 +254,7 @@ class UserController extends Controller
                 "User updated successfully"
             );
         } catch (\Exception $e) {
-            CommonHelper::response(
+            return CommonHelper::response(
                 false,
                 500,
                 null,
@@ -282,6 +282,12 @@ class UserController extends Controller
 
             $dm->remove($user);
             $dm->flush();
+
+            return CommonHelper::response(true,
+            200,
+            null,
+            "User has been deleted successfully");
+            
         } catch (\Exception $e) {
             return CommonHelper::response(
                 false,

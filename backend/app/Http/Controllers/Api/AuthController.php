@@ -20,59 +20,59 @@ class AuthController extends Controller
     }
 
     public function login(Request $request)
-{
-    $request->validate([
-        'email' => 'required',
-        'password' => 'required'
-    ]);
-
-    $user = $this->dm
-        ->getRepository(User::class)
-        ->findOneBy([
-            'email' => $request->email
+    {
+        $request->validate([
+            'email' => 'required',
+            'password' => 'required'
         ]);
 
-    if (!$user) {
+        $user = $this->dm
+            ->getRepository(User::class)
+            ->findOneBy([
+                'email' => $request->email
+            ]);
+
+        if (!$user) {
+
+            return CommonHelper::response(
+                false,
+                404,
+                null,
+                'User not found'
+            );
+        }
+
+        if (!password_verify(
+            $request->password,
+            $user->getPassword()
+        )) {
+
+            return CommonHelper::response(
+                false,
+                401,
+                null,
+                'Invalid password'
+            );
+        }
+
+        $token = JWTAuth::claims([
+            'sub' => $user->getId()
+        ])->fromUser($user);
 
         return CommonHelper::response(
-            false,
-            404,
-            null,
-            'User not found'
+            true,
+            200,
+            [
+                'token' => $token,
+                'user' => [
+                    'id' => $user->getId(),
+                    'name' => $user->getName(),
+                    'email' => $user->getEmail()
+                ]
+            ],
+            'Login successful'
         );
     }
-
-    if (!password_verify(
-        $request->password,
-        $user->getPassword()
-    )) {
-
-        return CommonHelper::response(
-            false,
-            401,
-            null,
-            'Invalid password'
-        );
-    }
-
-    $token = JWTAuth::claims([
-        'sub' => $user->getId()
-    ])->fromUser($user);
-
-    return CommonHelper::response(
-        true,
-        200,
-        [
-            'token' => $token,
-            'user' => [
-                'id' => $user->getId(),
-                'name' => $user->getName(),
-                'email' => $user->getEmail()
-            ]
-        ],
-        'Login successful'
-    );
-}
 
     public function refresh()
     {
@@ -88,7 +88,6 @@ class AuthController extends Controller
                 ],
                 'Token refreshed successfully'
             );
-
         } catch (\Exception $e) {
 
             return CommonHelper::response(
@@ -112,7 +111,6 @@ class AuthController extends Controller
                 null,
                 'Logged out successfully'
             );
-
         } catch (\Exception $e) {
             echo $e->getMessage();
             return CommonHelper::response(
@@ -124,34 +122,33 @@ class AuthController extends Controller
         }
     }
     public function me(Request $request)
-{
-    try {
+    {
+        try {
 
-        $user = $request->attributes->get('auth_user');
+            $user = $request->attributes->get('auth_user');
 
-        return CommonHelper::response(
-            true,
-            200,
-            [
-                'user' => [
-                    'id' => $user->getId(),
-                    'name' => $user->getName(),
-                    'email' => $user->getEmail(),
-                ]
-            ],
-            'User fetched successfully'
-        );
+            return CommonHelper::response(
+                true,
+                200,
+                [
+                    'user' => [
+                        'id' => $user->getId(),
+                        'name' => $user->getName(),
+                        'email' => $user->getEmail(),
+                    ]
+                ],
+                'User fetched successfully'
+            );
+        } catch (\Exception $e) {
 
-    } catch (\Exception $e) {
-
-        return CommonHelper::response(
-            false,
-            401,
-            null,
-            'Unauthorized'
-        );
+            return CommonHelper::response(
+                false,
+                401,
+                null,
+                'Unauthorized'
+            );
+        }
     }
-}
 }
 
 
