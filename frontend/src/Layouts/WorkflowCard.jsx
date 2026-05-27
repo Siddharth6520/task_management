@@ -24,19 +24,19 @@ const workflows = [
     steps: ["In Progress", "Review", "Completed"]
 
   },
-  {
-    title: "Deliver Faster",
-    icon: <FaRocket size={30} />,
-    steps: ["Finalize", "Approve", "Launch"]
+  // {
+  //   title: "Deliver Faster",
+  //   icon: <FaRocket size={30} />,
+  //   steps: ["Finalize", "Approve", "Launch"]
 
-  }
+  // }
 ];
 
 function WorkflowCards() {
   return (
     <div>
       <h1 className="text-4xl text-center pb-4 font-medium mt-24 mb-12">WorkFlows</h1>
-      <div className="grid grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 m-5">
         {workflows.map((workflow, index) => (
           <div
             key={index}

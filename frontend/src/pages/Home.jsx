@@ -8,6 +8,7 @@ const Home = () => {
             <NavBar/>
             <HeroSection/>
             <WorkflowCards/>
+            </>
         </div>
     )
 }
